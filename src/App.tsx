@@ -27,6 +27,8 @@ const STORAGE_JSON_KEY = "om_catalog_json"
 const STORAGE_URL_KEY = "om_catalog_url"
 const STORAGE_ADMIN_KEY = "om_is_admin"
 
+<script src="https://gist.github.com/purrrnsora/d375ba179c32e9c01e3c37ab0d69d46a.js"></script>
+
 // ===== Embedded catalog (25) =====
 const CATALOG_EMBED: Product[] = [
   {"id":"p-0001","name":{"ko":"규조토 발매트","en":"Diatomite Bath Mat"},"category":"KOR_LIVING","priceCad":22,"image":"https://i.postimg.cc/kBjDWL3d/2025-09-04-10-24-45.png","desc":{"ko":"빠른 건조, 흡수력 우수","en":"Quick-dry absorbent bath mat"},"stock":120,"rating":4.8,"gallery":["https://i.postimg.cc/kBjDWL3d/2025-09-04-10-24-45.png","https://i.postimg.cc/9rfQX14g/2025-09-04-10-25-49.png"]},
