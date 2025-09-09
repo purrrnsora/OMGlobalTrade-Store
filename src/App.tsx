@@ -12,7 +12,7 @@ interface Product {
   id: string
   name: { ko: string; en: string }
   category: Category
-  priceCad: number
+  price_cad: number
   image: string
   desc: { ko: string; en: string }
   stock: number
@@ -31,36 +31,36 @@ const STORAGE_ADMIN_KEY = "om_is_admin"
 
 // ===== Embedded catalog (25) =====
 const CATALOG_EMBED: Product[] = [
-  {"id":"p-0001","name":{"ko":"규조토 발매트","en":"Diatomite Bath Mat"},"category":"KOR_LIVING","priceCad":22,"image":"https://i.postimg.cc/kBjDWL3d/2025-09-04-10-24-45.png","desc":{"ko":"빠른 건조, 흡수력 우수","en":"Quick-dry absorbent bath mat"},"stock":120,"rating":4.8,"gallery":["https://i.postimg.cc/kBjDWL3d/2025-09-04-10-24-45.png","https://i.postimg.cc/9rfQX14g/2025-09-04-10-25-49.png"]},
-  {"id":"p-0002","name":{"ko":"스테인리스 집게(20p)","en":"Stainless Pegs (20p)"},"category":"KOR_LIVING","priceCad":13,"image":"https://i.postimg.cc/Yvh0R8ML/2025-09-04-10-25-03.png","desc":{"ko":"녹 방지 강력 집게","en":"Rust-proof strong pegs"},"stock":200,"rating":4.8,"gallery":["https://i.postimg.cc/Yvh0R8ML/2025-09-04-10-25-03.png"]},
-  {"id":"p-0003","name":{"ko":"김치 보관용기 5L","en":"Kimchi Keeper 5L"},"category":"KOR_LIVING","priceCad":24.5,"image":"https://i.postimg.cc/1nRL071L/2025-09-05-6-49-53.png","desc":{"ko":"밀폐력 좋은 김치 전용기","en":"Odor-sealed airtight kimchi container"},"stock":80,"rating":4.8,"gallery":["https://i.postimg.cc/1nRL071L/2025-09-05-6-49-53.png"]},
-  {"id":"p-0004","name":{"ko":"대나무 칫솔(4개)","en":"Bamboo Toothbrush 4-pack"},"category":"KOR_LIVING","priceCad":9.9,"image":"https://i.postimg.cc/75V91HPZ/2025-09-05-7-01-08.png","desc":{"ko":"친환경 생분해 칫솔","en":"Eco-friendly biodegradable toothbrushes"},"stock":300,"rating":4.8,"gallery":["https://i.postimg.cc/75V91HPZ/2025-09-05-7-01-08.png"]},
-  {"id":"p-0005","name":{"ko":"천연 해면수세미(3개)","en":"Natural Loofah (3pc)"},"category":"KOR_LIVING","priceCad":6.5,"image":"https://i.postimg.cc/GB6yGVDp/2025-09-05-7-26-01.png","desc":{"ko":"부드럽고 천연 소재","en":"Kitchen & bath natural scrubber"},"stock":180,"rating":4.7,"gallery":["https://i.postimg.cc/GB6yGVDp/2025-09-05-7-26-01.png"]},
+  {"id":"p-0001","name":{"ko":"규조토 발매트","en":"Diatomite Bath Mat"},"category":"KOR_LIVING","price_cad":22,"image":"https://i.postimg.cc/kBjDWL3d/2025-09-04-10-24-45.png","desc":{"ko":"빠른 건조, 흡수력 우수","en":"Quick-dry absorbent bath mat"},"stock":120,"rating":4.8,"gallery":["https://i.postimg.cc/kBjDWL3d/2025-09-04-10-24-45.png","https://i.postimg.cc/9rfQX14g/2025-09-04-10-25-49.png"]},
+  {"id":"p-0002","name":{"ko":"스테인리스 집게(20p)","en":"Stainless Pegs (20p)"},"category":"KOR_LIVING","price_cad":13,"image":"https://i.postimg.cc/Yvh0R8ML/2025-09-04-10-25-03.png","desc":{"ko":"녹 방지 강력 집게","en":"Rust-proof strong pegs"},"stock":200,"rating":4.8,"gallery":["https://i.postimg.cc/Yvh0R8ML/2025-09-04-10-25-03.png"]},
+  {"id":"p-0003","name":{"ko":"김치 보관용기 5L","en":"Kimchi Keeper 5L"},"category":"KOR_LIVING","price_cad":24.5,"image":"https://i.postimg.cc/1nRL071L/2025-09-05-6-49-53.png","desc":{"ko":"밀폐력 좋은 김치 전용기","en":"Odor-sealed airtight kimchi container"},"stock":80,"rating":4.8,"gallery":["https://i.postimg.cc/1nRL071L/2025-09-05-6-49-53.png"]},
+  {"id":"p-0004","name":{"ko":"대나무 칫솔(4개)","en":"Bamboo Toothbrush 4-pack"},"category":"KOR_LIVING","price_cad":9.9,"image":"https://i.postimg.cc/75V91HPZ/2025-09-05-7-01-08.png","desc":{"ko":"친환경 생분해 칫솔","en":"Eco-friendly biodegradable toothbrushes"},"stock":300,"rating":4.8,"gallery":["https://i.postimg.cc/75V91HPZ/2025-09-05-7-01-08.png"]},
+  {"id":"p-0005","name":{"ko":"천연 해면수세미(3개)","en":"Natural Loofah (3pc)"},"category":"KOR_LIVING","price_cad":6.5,"image":"https://i.postimg.cc/GB6yGVDp/2025-09-05-7-26-01.png","desc":{"ko":"부드럽고 천연 소재","en":"Kitchen & bath natural scrubber"},"stock":180,"rating":4.7,"gallery":["https://i.postimg.cc/GB6yGVDp/2025-09-05-7-26-01.png"]},
 
-  {"id":"p-0006","name":{"ko":"호랑이 민화 소품(3EA)","en":"Tiger Minhwa Set (3)"},"category":"CULTURE","priceCad":28,"image":"https://i.postimg.cc/YjzvChd0/2025-09-04-5-12-58.png","desc":{"ko":"전통 민화 감성","en":"Korean folk painting style"},"stock":50,"rating":4.7,"gallery":["https://i.postimg.cc/YjzvChd0/2025-09-04-5-12-58.png"]},
-  {"id":"p-0007","name":{"ko":"호랑이 엽서 세트","en":"Tiger Postcards"},"category":"CULTURE","priceCad":7.9,"image":"https://i.postimg.cc/tYdwfHRL/Screen-Shot-2023-01-25-at-4-18-26-PM.png","desc":{"ko":"감성 엽서 5매","en":"Set of 5 artistic postcards"},"stock":240,"rating":4.6,"gallery":["https://i.postimg.cc/tYdwfHRL/Screen-Shot-2023-01-25-at-4-18-26-PM.png"]},
-  {"id":"p-0008","name":{"ko":"호랑이 아트 프린트","en":"Tiger Art Print"},"category":"CULTURE","priceCad":12,"image":"https://i.postimg.cc/Y40PhGNH/Screen-Shot-2023-03-15-at-7-30-03-PM.png","desc":{"ko":"A4 사이즈 아트 프린트","en":"A4 sized decorative print"},"stock":120,"rating":4.7,"gallery":["https://i.postimg.cc/Y40PhGNH/Screen-Shot-2023-03-15-at-7-30-03-PM.png"]},
-  {"id":"p-0009","name":{"ko":"호랑이 벽장식","en":"Tiger Wall Decor"},"category":"CULTURE","priceCad":19.5,"image":"https://i.postimg.cc/zLQcWzpR/Screen-Shot-2023-09-03-at-3-38-30-PM.png","desc":{"ko":"벽걸이 전통 장식","en":"Traditional wall decoration"},"stock":60,"rating":4.7,"gallery":["https://i.postimg.cc/zLQcWzpR/Screen-Shot-2023-09-03-at-3-38-30-PM.png"]},
+  {"id":"p-0006","name":{"ko":"호랑이 민화 소품(3EA)","en":"Tiger Minhwa Set (3)"},"category":"CULTURE","price_cad":28,"image":"https://i.postimg.cc/YjzvChd0/2025-09-04-5-12-58.png","desc":{"ko":"전통 민화 감성","en":"Korean folk painting style"},"stock":50,"rating":4.7,"gallery":["https://i.postimg.cc/YjzvChd0/2025-09-04-5-12-58.png"]},
+  {"id":"p-0007","name":{"ko":"호랑이 엽서 세트","en":"Tiger Postcards"},"category":"CULTURE","price_cad":7.9,"image":"https://i.postimg.cc/tYdwfHRL/Screen-Shot-2023-01-25-at-4-18-26-PM.png","desc":{"ko":"감성 엽서 5매","en":"Set of 5 artistic postcards"},"stock":240,"rating":4.6,"gallery":["https://i.postimg.cc/tYdwfHRL/Screen-Shot-2023-01-25-at-4-18-26-PM.png"]},
+  {"id":"p-0008","name":{"ko":"호랑이 아트 프린트","en":"Tiger Art Print"},"category":"CULTURE","price_cad":12,"image":"https://i.postimg.cc/Y40PhGNH/Screen-Shot-2023-03-15-at-7-30-03-PM.png","desc":{"ko":"A4 사이즈 아트 프린트","en":"A4 sized decorative print"},"stock":120,"rating":4.7,"gallery":["https://i.postimg.cc/Y40PhGNH/Screen-Shot-2023-03-15-at-7-30-03-PM.png"]},
+  {"id":"p-0009","name":{"ko":"호랑이 벽장식","en":"Tiger Wall Decor"},"category":"CULTURE","price_cad":19.5,"image":"https://i.postimg.cc/zLQcWzpR/Screen-Shot-2023-09-03-at-3-38-30-PM.png","desc":{"ko":"벽걸이 전통 장식","en":"Traditional wall decoration"},"stock":60,"rating":4.7,"gallery":["https://i.postimg.cc/zLQcWzpR/Screen-Shot-2023-09-03-at-3-38-30-PM.png"]},
 
-  {"id":"p-0010","name":{"ko":"메이플 쿠키(캐나다)","en":"Maple Cookies (CA)"},"category":"CA_FOODS","priceCad":5.5,"image":"https://i.postimg.cc/2LZTnnys/2025-09-05-7-00-23.png","desc":{"ko":"달콤한 메이플풍미","en":"Crispy maple flavored cookies"},"stock":300,"rating":4.8,"gallery":["https://i.postimg.cc/2LZTnnys/2025-09-05-7-00-23.png"]},
-  {"id":"p-0011","name":{"ko":"메이플 시럽 250ml","en":"Maple Syrup 250ml"},"category":"CA_FOODS","priceCad":9.5,"image":"https://i.postimg.cc/grCgmtBm/2025-09-05-7-00-43.png","desc":{"ko":"캐나다산 순수 시럽","en":"Pure Canadian maple syrup"},"stock":140,"rating":4.9,"gallery":["https://i.postimg.cc/grCgmtBm/2025-09-05-7-00-43.png"]},
-  {"id":"p-0012","name":{"ko":"메이플 버터","en":"Maple Butter"},"category":"CA_FOODS","priceCad":8.5,"image":"https://i.postimg.cc/bGwT37dH/2025-09-05-7-00-50.png","desc":{"ko":"발라먹는 달콤버터","en":"Spreadable maple butter"},"stock":90,"rating":4.7,"gallery":["https://i.postimg.cc/bGwT37dH/2025-09-05-7-00-50.png"]},
-  {"id":"p-0013","name":{"ko":"메이플 사탕","en":"Maple Candies"},"category":"CA_FOODS","priceCad":4.9,"image":"https://i.postimg.cc/75V91HPZ/2025-09-05-7-01-08.png","desc":{"ko":"한입 사이즈 캔디","en":"Bite-size maple candies"},"stock":220,"rating":4.6,"gallery":["https://i.postimg.cc/75V91HPZ/2025-09-05-7-01-08.png"]},
+  {"id":"p-0010","name":{"ko":"메이플 쿠키(캐나다)","en":"Maple Cookies (CA)"},"category":"CA_FOODS","price_cad":5.5,"image":"https://i.postimg.cc/2LZTnnys/2025-09-05-7-00-23.png","desc":{"ko":"달콤한 메이플풍미","en":"Crispy maple flavored cookies"},"stock":300,"rating":4.8,"gallery":["https://i.postimg.cc/2LZTnnys/2025-09-05-7-00-23.png"]},
+  {"id":"p-0011","name":{"ko":"메이플 시럽 250ml","en":"Maple Syrup 250ml"},"category":"CA_FOODS","price_cad":9.5,"image":"https://i.postimg.cc/grCgmtBm/2025-09-05-7-00-43.png","desc":{"ko":"캐나다산 순수 시럽","en":"Pure Canadian maple syrup"},"stock":140,"rating":4.9,"gallery":["https://i.postimg.cc/grCgmtBm/2025-09-05-7-00-43.png"]},
+  {"id":"p-0012","name":{"ko":"메이플 버터","en":"Maple Butter"},"category":"CA_FOODS","price_cad":8.5,"image":"https://i.postimg.cc/bGwT37dH/2025-09-05-7-00-50.png","desc":{"ko":"발라먹는 달콤버터","en":"Spreadable maple butter"},"stock":90,"rating":4.7,"gallery":["https://i.postimg.cc/bGwT37dH/2025-09-05-7-00-50.png"]},
+  {"id":"p-0013","name":{"ko":"메이플 사탕","en":"Maple Candies"},"category":"CA_FOODS","price_cad":4.9,"image":"https://i.postimg.cc/75V91HPZ/2025-09-05-7-01-08.png","desc":{"ko":"한입 사이즈 캔디","en":"Bite-size maple candies"},"stock":220,"rating":4.6,"gallery":["https://i.postimg.cc/75V91HPZ/2025-09-05-7-01-08.png"]},
 
-  {"id":"p-0014","name":{"ko":"스테인리스 공구세트","en":"Stainless Tool Set"},"category":"TOOLS","priceCad":49.9,"image":"https://i.postimg.cc/rKbMVT2z/2025-09-05-6-30-09.png","desc":{"ko":"다용도 내구성 우수","en":"Durable multipurpose tool set"},"stock":40,"rating":4.9,"gallery":["https://i.postimg.cc/rKbMVT2z/2025-09-05-6-30-09.png"]},
-  {"id":"p-0015","name":{"ko":"정밀 드라이버 세트","en":"Precision Driver Kit"},"category":"TOOLS","priceCad":16.9,"image":"https://i.postimg.cc/Tyvxbcw6/2025-09-05-6-34-20.png","desc":{"ko":"전자제품 수리용","en":"For electronics & small repairs"},"stock":120,"rating":4.7,"gallery":["https://i.postimg.cc/Tyvxbcw6/2025-09-05-6-34-20.png"]},
-  {"id":"p-0016","name":{"ko":"작업 장갑(컷방지)","en":"Cut-proof Gloves"},"category":"TOOLS","priceCad":7.5,"image":"https://i.postimg.cc/S2ypTNC1/2025-09-05-6-34-37.png","desc":{"ko":"미끄럼 방지, 내구성","en":"Anti-slip, durable gloves"},"stock":260,"rating":4.6,"gallery":["https://i.postimg.cc/S2ypTNC1/2025-09-05-6-34-37.png"]},
-  {"id":"p-0017","name":{"ko":"실리콘 코킹툴","en":"Silicone Caulk Tool"},"category":"TOOLS","priceCad":6.9,"image":"https://i.postimg.cc/4HyRGL8z/2025-09-05-6-34-56.png","desc":{"ko":"코킹 마감용 툴","en":"Caulking finishing tool"},"stock":190,"rating":4.6,"gallery":["https://i.postimg.cc/4HyRGL8z/2025-09-05-6-34-56.png"]},
+  {"id":"p-0014","name":{"ko":"스테인리스 공구세트","en":"Stainless Tool Set"},"category":"TOOLS","price_cad":49.9,"image":"https://i.postimg.cc/rKbMVT2z/2025-09-05-6-30-09.png","desc":{"ko":"다용도 내구성 우수","en":"Durable multipurpose tool set"},"stock":40,"rating":4.9,"gallery":["https://i.postimg.cc/rKbMVT2z/2025-09-05-6-30-09.png"]},
+  {"id":"p-0015","name":{"ko":"정밀 드라이버 세트","en":"Precision Driver Kit"},"category":"TOOLS","price_cad":16.9,"image":"https://i.postimg.cc/Tyvxbcw6/2025-09-05-6-34-20.png","desc":{"ko":"전자제품 수리용","en":"For electronics & small repairs"},"stock":120,"rating":4.7,"gallery":["https://i.postimg.cc/Tyvxbcw6/2025-09-05-6-34-20.png"]},
+  {"id":"p-0016","name":{"ko":"작업 장갑(컷방지)","en":"Cut-proof Gloves"},"category":"TOOLS","price_cad":7.5,"image":"https://i.postimg.cc/S2ypTNC1/2025-09-05-6-34-37.png","desc":{"ko":"미끄럼 방지, 내구성","en":"Anti-slip, durable gloves"},"stock":260,"rating":4.6,"gallery":["https://i.postimg.cc/S2ypTNC1/2025-09-05-6-34-37.png"]},
+  {"id":"p-0017","name":{"ko":"실리콘 코킹툴","en":"Silicone Caulk Tool"},"category":"TOOLS","price_cad":6.9,"image":"https://i.postimg.cc/4HyRGL8z/2025-09-05-6-34-56.png","desc":{"ko":"코킹 마감용 툴","en":"Caulking finishing tool"},"stock":190,"rating":4.6,"gallery":["https://i.postimg.cc/4HyRGL8z/2025-09-05-6-34-56.png"]},
 
-  {"id":"p-0018","name":{"ko":"캐나다산 참나무 원목","en":"Canadian Oak Lumber"},"category":"RAW","priceCad":35,"image":"https://i.postimg.cc/ZWCPNrQV/2025-09-06-10-49-26.png","desc":{"ko":"가구용 고급 원목","en":"Premium lumber for furniture"},"stock":25,"rating":4.8,"gallery":["https://i.postimg.cc/ZWCPNrQV/2025-09-06-10-49-26.png"]},
-  {"id":"p-0019","name":{"ko":"메이플 원자재(슬랩)","en":"Maple Slab"},"category":"RAW","priceCad":42,"image":"https://i.postimg.cc/zy6CFyZ5/2025-09-06-10-49-38.png","desc":{"ko":"자연무늬 원목 슬랩","en":"Natural grain wood slab"},"stock":18,"rating":4.8,"gallery":["https://i.postimg.cc/zy6CFyZ5/2025-09-06-10-49-38.png"]},
-  {"id":"p-0020","name":{"ko":"레드파인 집성목","en":"Red Pine Board"},"category":"RAW","priceCad":29,"image":"https://i.postimg.cc/47TpjjxS/2025-09-06-10-49-50.png","desc":{"ko":"경량, 인테리어용","en":"Lightweight, interior use"},"stock":40,"rating":4.7,"gallery":["https://i.postimg.cc/47TpjjxS/2025-09-06-10-49-50.png"]},
-  {"id":"p-0021","name":{"ko":"월넛 원목 보드","en":"Walnut Board"},"category":"RAW","priceCad":58,"image":"https://i.postimg.cc/ftjYs53T/2025-09-06-10-49-58.png","desc":{"ko":"고급 원목, 진한색","en":"Dark premium hardwood"},"stock":12,"rating":4.9,"gallery":["https://i.postimg.cc/ftjYs53T/2025-09-06-10-49-58.png"]},
+  {"id":"p-0018","name":{"ko":"캐나다산 참나무 원목","en":"Canadian Oak Lumber"},"category":"RAW","price_cad":35,"image":"https://i.postimg.cc/ZWCPNrQV/2025-09-06-10-49-26.png","desc":{"ko":"가구용 고급 원목","en":"Premium lumber for furniture"},"stock":25,"rating":4.8,"gallery":["https://i.postimg.cc/ZWCPNrQV/2025-09-06-10-49-26.png"]},
+  {"id":"p-0019","name":{"ko":"메이플 원자재(슬랩)","en":"Maple Slab"},"category":"RAW","price_cad":42,"image":"https://i.postimg.cc/zy6CFyZ5/2025-09-06-10-49-38.png","desc":{"ko":"자연무늬 원목 슬랩","en":"Natural grain wood slab"},"stock":18,"rating":4.8,"gallery":["https://i.postimg.cc/zy6CFyZ5/2025-09-06-10-49-38.png"]},
+  {"id":"p-0020","name":{"ko":"레드파인 집성목","en":"Red Pine Board"},"category":"RAW","price_cad":29,"image":"https://i.postimg.cc/47TpjjxS/2025-09-06-10-49-50.png","desc":{"ko":"경량, 인테리어용","en":"Lightweight, interior use"},"stock":40,"rating":4.7,"gallery":["https://i.postimg.cc/47TpjjxS/2025-09-06-10-49-50.png"]},
+  {"id":"p-0021","name":{"ko":"월넛 원목 보드","en":"Walnut Board"},"category":"RAW","price_cad":58,"image":"https://i.postimg.cc/ftjYs53T/2025-09-06-10-49-58.png","desc":{"ko":"고급 원목, 진한색","en":"Dark premium hardwood"},"stock":12,"rating":4.9,"gallery":["https://i.postimg.cc/ftjYs53T/2025-09-06-10-49-58.png"]},
 
-  {"id":"p-0022","name":{"ko":"초극세사 다용도 매트","en":"Ultrafine Utility Mat"},"category":"KOR_LIVING","priceCad":11.9,"image":"https://i.postimg.cc/FYLdmG85/2025-09-06-11-01-59.png","desc":{"ko":"세탁/건조 쉬움","en":"Easy clean & dry"},"stock":210,"rating":4.6,"gallery":["https://i.postimg.cc/FYLdmG85/2025-09-06-11-01-59.png"]},
-  {"id":"p-0023","name":{"ko":"방수 테이블 매트","en":"Waterproof Table Mat"},"category":"KOR_LIVING","priceCad":9.9,"image":"https://i.postimg.cc/GBnBpGnB/2025-09-06-11-10-49.png","desc":{"ko":"생활방수 표면","en":"Water-repellent surface"},"stock":160,"rating":4.6,"gallery":["https://i.postimg.cc/GBnBpGnB/2025-09-06-11-10-49.png"]},
-  {"id":"p-0024","name":{"ko":"논슬립 데스크 패드","en":"Non-slip Desk Pad"},"category":"KOR_LIVING","priceCad":12.5,"image":"https://i.postimg.cc/wt51RM9w/2025-09-06-11-10-57.png","desc":{"ko":"미끄럼방지, 부드러움","en":"Grippy and soft surface"},"stock":150,"rating":4.7,"gallery":["https://i.postimg.cc/wt51RM9w/2025-09-06-11-10-57.png"]},
-  {"id":"p-0025","name":{"ko":"방수 셀프 접착시트","en":"Waterproof Self-adhesive Sheet"},"category":"KOR_LIVING","priceCad":10.9,"image":"https://i.postimg.cc/mz8hVnzM/2025-09-06-11-11-13.png","desc":{"ko":"간편 시공 인테리어","en":"Easy DIY interior sheet"},"stock":170,"rating":4.6,"gallery":["https://i.postimg.cc/mz8hVnzM/2025-09-06-11-11-13.png"]}
+  {"id":"p-0022","name":{"ko":"초극세사 다용도 매트","en":"Ultrafine Utility Mat"},"category":"KOR_LIVING","price_cad":11.9,"image":"https://i.postimg.cc/FYLdmG85/2025-09-06-11-01-59.png","desc":{"ko":"세탁/건조 쉬움","en":"Easy clean & dry"},"stock":210,"rating":4.6,"gallery":["https://i.postimg.cc/FYLdmG85/2025-09-06-11-01-59.png"]},
+  {"id":"p-0023","name":{"ko":"방수 테이블 매트","en":"Waterproof Table Mat"},"category":"KOR_LIVING","price_cad":9.9,"image":"https://i.postimg.cc/GBnBpGnB/2025-09-06-11-10-49.png","desc":{"ko":"생활방수 표면","en":"Water-repellent surface"},"stock":160,"rating":4.6,"gallery":["https://i.postimg.cc/GBnBpGnB/2025-09-06-11-10-49.png"]},
+  {"id":"p-0024","name":{"ko":"논슬립 데스크 패드","en":"Non-slip Desk Pad"},"category":"KOR_LIVING","price_cad":12.5,"image":"https://i.postimg.cc/wt51RM9w/2025-09-06-11-10-57.png","desc":{"ko":"미끄럼방지, 부드러움","en":"Grippy and soft surface"},"stock":150,"rating":4.7,"gallery":["https://i.postimg.cc/wt51RM9w/2025-09-06-11-10-57.png"]},
+  {"id":"p-0025","name":{"ko":"방수 셀프 접착시트","en":"Waterproof Self-adhesive Sheet"},"category":"KOR_LIVING","price_cad":10.9,"image":"https://i.postimg.cc/mz8hVnzM/2025-09-06-11-11-13.png","desc":{"ko":"간편 시공 인테리어","en":"Easy DIY interior sheet"},"stock":170,"rating":4.6,"gallery":["https://i.postimg.cc/mz8hVnzM/2025-09-06-11-11-13.png"]}
 ]
 
 // ===== Utils =====
@@ -102,7 +102,7 @@ function parseCSV(csv: string): any[] {
       name_ko: get("name_ko") || get("name"),
       name_en: get("name_en") || get("name"),
       category: get("category"),
-      price_cad: get("price_cad") || get("price"),
+      price_cad: get("price_cad") || get("price") || get("priceCad"),
       image_url: get("image_url"),
       desc_ko: get("desc_ko"),
       desc_en: get("desc_en") || get("desc"),
@@ -148,13 +148,13 @@ function normalizeProduct(raw:any, i:number): Product {
   const options: {label:string;values:string[]}[] = []
   if (opt1L && opt1V.length) options.push({label:opt1L, values:opt1V})
   if (opt2L && opt2V.length) options.push({label:opt2L, values:opt2V})
-  const priceNum = parsePrice(raw?.price_cad ?? raw?.price)
+  const priceNum = parsePrice(raw?.price_cad ?? raw?.price ?? raw?.priceCad)
   const stockNum = parseInt(asStr(raw?.stock))
   return {
     id: asStr(raw?.id) || `csv-${i+1}`,
     name: { ko: asStr(nameKo), en: asStr(nameEn) },
     category,
-    priceCad: Number.isFinite(priceNum) ? priceNum : 0,
+    price_cad: Number.isFinite(priceNum) ? priceNum : 0,
     image,
     desc: { ko: asStr(descKo), en: asStr(descEn) },
     stock: Number.isFinite(stockNum) ? stockNum : 0,
