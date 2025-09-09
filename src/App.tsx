@@ -148,7 +148,9 @@ function normalizeProduct(raw:any, i:number): Product {
   const options: {label:string;values:string[]}[] = []
   if (opt1L && opt1V.length) options.push({label:opt1L, values:opt1V})
   if (opt2L && opt2V.length) options.push({label:opt2L, values:opt2V})
-  const priceNum = parsePrice(raw?.price_cad ?? raw?.price ?? raw?.priceCad)
+  const priceNum = parsePrice(
+    raw?.price_cad ?? raw?.price ?? raw?.priceCad
+  )
   const stockNum = parseInt(asStr(raw?.stock))
   return {
     id: asStr(raw?.id) || `csv-${i+1}`,
@@ -185,25 +187,24 @@ export default function App(){
   const [catalog,setCatalog]=React.useState<Product[]>(CATALOG_EMBED)
 
   // Initial load: local JSON -> URL -> embedded
-  React.useEffect(()=>{
-    try{
-      const saved = localStorage.getItem(STORAGE_JSON_KEY)
-      if (saved){
-        const parsed = JSON.parse(saved)
-        const norm = normalizeCatalog(parsed)
-        if (norm.length){ setCatalog(norm); return }
+  React.useEffect(() => {
+  const savedUrl = localStorage.getItem('om_catalog_url') || ''
+  if (!savedUrl) return
+  ;(async () => {
+    try {
+      const r = await fetch(savedUrl, { cache: 'no-store' })
+      const j = await r.json()
+      const normalized = normalizeCatalog(Array.isArray(j) ? j : (j.items || []))
+      if (normalized.length) {
+        setCatalog(normalized)
+        localStorage.setItem('om_catalog_json', JSON.stringify(normalized))
       }
-      const url = localStorage.getItem(STORAGE_URL_KEY)
-      if (url){
-        fetch(url).then(r=>r.json()).then((data)=>{
-          const norm = normalizeCatalog(data)
-          if (norm.length){ setCatalog(norm) }
-        }).catch(()=>{/* silent fallback */})
-      }
-    }catch{ /* fallback to embedded */ }
-  },[])
-
-  React.useEffect(()=>{ if(selected){ setQty(1); setSlide(0) } },[selected])
+    } catch (e) {
+      console.error('Auto-load catalog failed', e)
+    }
+  })()
+}, [])
+  localStorage.setItem('om_catalog_url', url)
 
   const displayed = cat==="ALL" ? catalog : catalog.filter(p=>p.category===cat)
   const subtotal = cart.reduce((s,ci)=>s+ci.p.priceCad*ci.qty,0)
