@@ -1,4 +1,9 @@
-// OM Global Trade – storefront ready for Vercel
+// OM Global Trade – Fixed storefront (embedded 25 items)
+// - No CSV/URL needed. Catalog is hard-coded.
+// - Product modal with image slider & options
+// - Cart (multi-items) & simple checkout
+// - Price rendering fixed
+
 import * as React from 'react'
 
 type Category = 'KOR_LIVING'|'CULTURE'|'CA_FOODS'|'TOOLS'|'RAW'
@@ -18,161 +23,89 @@ interface Product {
 const museo = { fontFamily: 'MuseoModerno, ui-sans-serif, system-ui' }
 const LOGO = 'https://i.postimg.cc/vBDBgY03/IMG-3298.jpg'
 
-const DEFAULT_CATALOG: Product[] = [
-  { id:'p-001', category:'KOR_LIVING', name:{ko:'흡수성 발매트',en:'Quick-Dry Bath Mat'}, desc:{ko:'초흡수 대리석 패턴 발매트',en:'Super-absorbent stone-pattern bath mat'}, priceCad:19.99, stock:120, image:'https://i.postimg.cc/Yvh0R8ML/2025-09-04-10-25-03.png', gallery:['https://i.postimg.cc/kBjDWL3d/2025-09-04-10-24-45.png','https://i.postimg.cc/9rfQX14g/2025-09-04-10-25-49.png'], rating:4.7, options:[{label:'Size',values:['S','M','L']}] },
-  { id:'p-002', category:'KOR_LIVING', name:{ko:'김치 보관용기 5L',en:'Kimchi Keeper 5L'}, desc:{ko:'김치 숙성·보관 최적화',en:'Optimized for fermenting and storing kimchi'}, priceCad:24.5, stock:80, image:'https://i.postimg.cc/SxmXtfKM/2025-09-05-6-24-46.png', gallery:['https://i.postimg.cc/qh0pPGVL/2025-09-05-6-24-56.png'] },
-  { id:'p-003', category:'TOOLS', name:{ko:'스테인리스 공구세트',en:'Stainless Tool Set'}, desc:{ko:'내구성 강한 다용도 툴',en:'Durable multipurpose tool kit'}, priceCad:49.9, stock:40, image:'https://i.postimg.cc/G2vdC67h/2025-09-05-6-49-53.png' },
-  { id:'p-004', category:'CULTURE', name:{ko:'전통 부채 굿즈',en:'Traditional Fan Merchandise'}, desc:{ko:'문화 콘텐츠 굿즈',en:'Culture content merchandise'}, priceCad:14.0, stock:70, image:'https://i.postimg.cc/zLQcWzpR/Screen-Shot-2023-09-03-at-3-38-30-PM.png' },
-  { id:'p-005', category:'CA_FOODS', name:{ko:'캐나다 메이플 시럽',en:'Canadian Maple Syrup 500ml'}, desc:{ko:'프리미엄 그레이드 A',en:'Premium Grade A'}, priceCad:17.5, stock:150, image:'https://i.postimg.cc/4nSrt1LS/2025-09-05-6-50-02.png' },
-  { id:'p-006', category:'RAW', name:{ko:'캐나다 원목 원자재',en:'Canadian Lumber (Raw)'}, desc:{ko:'가구·건축용 원자재',en:'Raw material for furniture & construction'}, priceCad:129.0, stock:20, image:'https://i.postimg.cc/75V91HPZ/2025-09-05-7-01-08.png' },
-  { id:'p-007', category:'TOOLS', name:{ko:'안전화',en:'Safety Boots'}, desc:{ko:'현장 필수 안전부츠',en:'Essential worksite safety boots'}, priceCad:69.0, stock:45, image:'https://i.postimg.cc/PCwhN7dy/2025-09-05-6-29-50.png' },
-  { id:'p-008', category:'CULTURE', name:{ko:'K-드라마 포스터',en:'K-Drama Poster'}, desc:{ko:'공식 라이선스',en:'Officially licensed'}, priceCad:12.0, stock:90, image:'https://i.postimg.cc/Y40PhGNH/Screen-Shot-2023-03-15-at-7-30-03-PM.png' },
-  { id:'p-009', category:'KOR_LIVING', name:{ko:'다용도 수납함',en:'Multi-purpose Organizer'}, desc:{ko:'깔끔한 정리',en:'Keep things tidy'}, priceCad:9.99, stock:160, image:'https://i.postimg.cc/VS98Wbrb/2025-09-05-6-35-37.png' },
-  { id:'p-010', category:'CA_FOODS', name:{ko:'와일드 블루베리 잼',en:'Wild Blueberry Jam'}, desc:{ko:'설탕 함량 30%↓',en:'30% less sugar'}, priceCad:8.49, stock:110, image:'https://i.postimg.cc/GB6yGVDp/2025-09-05-7-26-01.png' },
-]
+// ===== Embedded catalog (25) =====
+const CATALOG: Product[] = /** START: DO NOT EDIT (generated) **/ [
+  {"id":"p-0001","name":{"ko":"규조토 발매트","en":"Diatomite Bath Mat"},"category":"KOR_LIVING","priceCad":22,"image":"https://i.postimg.cc/kBjDWL3d/2025-09-04-10-24-45.png","desc":{"ko":"빠른 건조, 흡수력 우수","en":"Quick-dry absorbent bath mat"},"stock":120,"rating":4.8,"gallery":["https://i.postimg.cc/kBjDWL3d/2025-09-04-10-24-45.png","https://i.postimg.cc/9rfQX14g/2025-09-04-10-25-49.png"]},
+  {"id":"p-0002","name":{"ko":"스테인리스 집게(20p)","en":"Stainless Pegs (20p)"},"category":"KOR_LIVING","priceCad":13,"image":"https://i.postimg.cc/Yvh0R8ML/2025-09-04-10-25-03.png","desc":{"ko":"녹 방지 강력 집게","en":"Rust-proof strong pegs"},"stock":200,"rating":4.8,"gallery":["https://i.postimg.cc/Yvh0R8ML/2025-09-04-10-25-03.png"]},
+  {"id":"p-0003","name":{"ko":"김치 보관용기 5L","en":"Kimchi Keeper 5L"},"category":"KOR_LIVING","priceCad":24.5,"image":"https://i.postimg.cc/1nRL071L/2025-09-05-6-49-53.png","desc":{"ko":"밀폐력 좋은 김치 전용기","en":"Odor-sealed airtight kimchi container"},"stock":80,"rating":4.8,"gallery":["https://i.postimg.cc/1nRL071L/2025-09-05-6-49-53.png"]},
+  {"id":"p-0004","name":{"ko":"대나무 칫솔(4개)","en":"Bamboo Toothbrush 4-pack"},"category":"KOR_LIVING","priceCad":9.9,"image":"https://i.postimg.cc/75V91HPZ/2025-09-05-7-01-08.png","desc":{"ko":"친환경 생분해 칫솔","en":"Eco-friendly biodegradable toothbrushes"},"stock":300,"rating":4.8,"gallery":["https://i.postimg.cc/75V91HPZ/2025-09-05-7-01-08.png"]},
+  {"id":"p-0005","name":{"ko":"천연 해면수세미(3개)","en":"Natural Loofah (3pc)"},"category":"KOR_LIVING","priceCad":6.5,"image":"https://i.postimg.cc/GB6yGVDp/2025-09-05-7-26-01.png","desc":{"ko":"부드럽고 천연 소재","en":"Kitchen & bath natural scrubber"},"stock":180,"rating":4.7,"gallery":["https://i.postimg.cc/GB6yGVDp/2025-09-05-7-26-01.png"]},
 
-const allowedCats: Category[] = ['KOR_LIVING','CULTURE','CA_FOODS','TOOLS','RAW']
-const asStr = (v:any) => (typeof v === 'string' ? v : v == null ? '' : String(v))
-const nameOf = (p:Product, lang:'ko'|'en') => (p?.name && ((p.name as any)[lang] || (p.name as any).en)) || ''
-const descOf = (p:Product, lang:'ko'|'en') => (p?.desc && ((p.desc as any)[lang] || (p.desc as any).en)) || ''
+  {"id":"p-0006","name":{"ko":"호랑이 민화 소품(3EA)","en":"Tiger Minhwa Set (3)"},"category":"CULTURE","priceCad":28,"image":"https://i.postimg.cc/YjzvChd0/2025-09-04-5-12-58.png","desc":{"ko":"전통 민화 감성","en":"Korean folk painting style"},"stock":50,"rating":4.7,"gallery":["https://i.postimg.cc/YjzvChd0/2025-09-04-5-12-58.png"]},
+  {"id":"p-0007","name":{"ko":"호랑이 엽서 세트","en":"Tiger Postcards"},"category":"CULTURE","priceCad":7.9,"image":"https://i.postimg.cc/tYdwfHRL/Screen-Shot-2023-01-25-at-4-18-26-PM.png","desc":{"ko":"감성 엽서 5매","en":"Set of 5 artistic postcards"},"stock":240,"rating":4.6,"gallery":["https://i.postimg.cc/tYdwfHRL/Screen-Shot-2023-01-25-at-4-18-26-PM.png"]},
+  {"id":"p-0008","name":{"ko":"호랑이 아트 프린트","en":"Tiger Art Print"},"category":"CULTURE","priceCad":12,"image":"https://i.postimg.cc/Y40PhGNH/Screen-Shot-2023-03-15-at-7-30-03-PM.png","desc":{"ko":"A4 사이즈 아트 프린트","en":"A4 sized decorative print"},"stock":120,"rating":4.7,"gallery":["https://i.postimg.cc/Y40PhGNH/Screen-Shot-2023-03-15-at-7-30-03-PM.png"]},
+  {"id":"p-0009","name":{"ko":"호랑이 벽장식","en":"Tiger Wall Decor"},"category":"CULTURE","priceCad":19.5,"image":"https://i.postimg.cc/zLQcWzpR/Screen-Shot-2023-09-03-at-3-38-30-PM.png","desc":{"ko":"벽걸이 전통 장식","en":"Traditional wall decoration"},"stock":60,"rating":4.7,"gallery":["https://i.postimg.cc/zLQcWzpR/Screen-Shot-2023-09-03-at-3-38-30-PM.png"]},
+
+  {"id":"p-0010","name":{"ko":"메이플 쿠키(캐나다)","en":"Maple Cookies (CA)"},"category":"CA_FOODS","priceCad":5.5,"image":"https://i.postimg.cc/2LZTnnys/2025-09-05-7-00-23.png","desc":{"ko":"달콤한 메이플풍미","en":"Crispy maple flavored cookies"},"stock":300,"rating":4.8,"gallery":["https://i.postimg.cc/2LZTnnys/2025-09-05-7-00-23.png"]},
+  {"id":"p-0011","name":{"ko":"메이플 시럽 250ml","en":"Maple Syrup 250ml"},"category":"CA_FOODS","priceCad":9.5,"image":"https://i.postimg.cc/grCgmtBm/2025-09-05-7-00-43.png","desc":{"ko":"캐나다산 순수 시럽","en":"Pure Canadian maple syrup"},"stock":140,"rating":4.9,"gallery":["https://i.postimg.cc/grCgmtBm/2025-09-05-7-00-43.png"]},
+  {"id":"p-0012","name":{"ko":"메이플 버터","en":"Maple Butter"},"category":"CA_FOODS","priceCad":8.5,"image":"https://i.postimg.cc/bGwT37dH/2025-09-05-7-00-50.png","desc":{"ko":"발라먹는 달콤버터","en":"Spreadable maple butter"},"stock":90,"rating":4.7,"gallery":["https://i.postimg.cc/bGwT37dH/2025-09-05-7-00-50.png"]},
+  {"id":"p-0013","name":{"ko":"메이플 사탕","en":"Maple Candies"},"category":"CA_FOODS","priceCad":4.9,"image":"https://i.postimg.cc/75V91HPZ/2025-09-05-7-01-08.png","desc":{"ko":"한입 사이즈 캔디","en":"Bite-size maple candies"},"stock":220,"rating":4.6,"gallery":["https://i.postimg.cc/75V91HPZ/2025-09-05-7-01-08.png"]},
+
+  {"id":"p-0014","name":{"ko":"스테인리스 공구세트","en":"Stainless Tool Set"},"category":"TOOLS","priceCad":49.9,"image":"https://i.postimg.cc/rKbMVT2z/2025-09-05-6-30-09.png","desc":{"ko":"다용도 내구성 우수","en":"Durable multipurpose tool set"},"stock":40,"rating":4.9,"gallery":["https://i.postimg.cc/rKbMVT2z/2025-09-05-6-30-09.png"]},
+  {"id":"p-0015","name":{"ko":"정밀 드라이버 세트","en":"Precision Driver Kit"},"category":"TOOLS","priceCad":16.9,"image":"https://i.postimg.cc/Tyvxbcw6/2025-09-05-6-34-20.png","desc":{"ko":"전자제품 수리용","en":"For electronics & small repairs"},"stock":120,"rating":4.7,"gallery":["https://i.postimg.cc/Tyvxbcw6/2025-09-05-6-34-20.png"]},
+  {"id":"p-0016","name":{"ko":"작업 장갑(컷방지)","en":"Cut-proof Gloves"},"category":"TOOLS","priceCad":7.5,"image":"https://i.postimg.cc/S2ypTNC1/2025-09-05-6-34-37.png","desc":{"ko":"미끄럼 방지, 내구성","en":"Anti-slip, durable gloves"},"stock":260,"rating":4.6,"gallery":["https://i.postimg.cc/S2ypTNC1/2025-09-05-6-34-37.png"]},
+  {"id":"p-0017","name":{"ko":"실리콘 코킹툴","en":"Silicone Caulk Tool"},"category":"TOOLS","priceCad":6.9,"image":"https://i.postimg.cc/4HyRGL8z/2025-09-05-6-34-56.png","desc":{"ko":"코킹 마감용 툴","en":"Caulking finishing tool"},"stock":190,"rating":4.6,"gallery":["https://i.postimg.cc/4HyRGL8z/2025-09-05-6-34-56.png"]},
+
+  {"id":"p-0018","name":{"ko":"캐나다산 참나무 원목","en":"Canadian Oak Lumber"},"category":"RAW","priceCad":35,"image":"https://i.postimg.cc/ZWCPNrQV/2025-09-06-10-49-26.png","desc":{"ko":"가구용 고급 원목","en":"Premium lumber for furniture"},"stock":25,"rating":4.8,"gallery":["https://i.postimg.cc/ZWCPNrQV/2025-09-06-10-49-26.png"]},
+  {"id":"p-0019","name":{"ko":"메이플 원자재(슬랩)","en":"Maple Slab"},"category":"RAW","priceCad":42,"image":"https://i.postimg.cc/zy6CFyZ5/2025-09-06-10-49-38.png","desc":{"ko":"자연무늬 원목 슬랩","en":"Natural grain wood slab"},"stock":18,"rating":4.8,"gallery":["https://i.postimg.cc/zy6CFyZ5/2025-09-06-10-49-38.png"]},
+  {"id":"p-0020","name":{"ko":"레드파인 집성목","en":"Red Pine Board"},"category":"RAW","priceCad":29,"image":"https://i.postimg.cc/47TpjjxS/2025-09-06-10-49-50.png","desc":{"ko":"경량, 인테리어용","en":"Lightweight, interior use"},"stock":40,"rating":4.7,"gallery":["https://i.postimg.cc/47TpjjxS/2025-09-06-10-49-50.png"]},
+  {"id":"p-0021","name":{"ko":"월넛 원목 보드","en":"Walnut Board"},"category":"RAW","priceCad":58,"image":"https://i.postimg.cc/ftjYs53T/2025-09-06-10-49-58.png","desc":{"ko":"고급 원목, 진한색","en":"Dark premium hardwood"},"stock":12,"rating":4.9,"gallery":["https://i.postimg.cc/ftjYs53T/2025-09-06-10-49-58.png"]},
+
+  {"id":"p-0022","name":{"ko":"초극세사 다용도 매트","en":"Ultrafine Utility Mat"},"category":"KOR_LIVING","priceCad":11.9,"image":"https://i.postimg.cc/FYLdmG85/2025-09-06-11-01-59.png","desc":{"ko":"세탁/건조 쉬움","en":"Easy clean & dry"},"stock":210,"rating":4.6,"gallery":["https://i.postimg.cc/FYLdmG85/2025-09-06-11-01-59.png"]},
+  {"id":"p-0023","name":{"ko":"방수 테이블 매트","en":"Waterproof Table Mat"},"category":"KOR_LIVING","priceCad":9.9,"image":"https://i.postimg.cc/GBnBpGnB/2025-09-06-11-10-49.png","desc":{"ko":"생활방수 표면","en":"Water-repellent surface"},"stock":160,"rating":4.6,"gallery":["https://i.postimg.cc/GBnBpGnB/2025-09-06-11-10-49.png"]},
+  {"id":"p-0024","name":{"ko":"논슬립 데스크 패드","en":"Non-slip Desk Pad"},"category":"KOR_LIVING","priceCad":12.5,"image":"https://i.postimg.cc/wt51RM9w/2025-09-06-11-10-57.png","desc":{"ko":"미끄럼방지, 부드러움","en":"Grippy and soft surface"},"stock":150,"rating":4.7,"gallery":["https://i.postimg.cc/wt51RM9w/2025-09-06-11-10-57.png"]},
+  {"id":"p-0025","name":{"ko":"방수 셀프 접착시트","en":"Waterproof Self-adhesive Sheet"},"category":"KOR_LIVING","priceCad":10.9,"image":"https://i.postimg.cc/mz8hVnzM/2025-09-06-11-11-13.png","desc":{"ko":"간편 시공 인테리어","en":"Easy DIY interior sheet"},"stock":170,"rating":4.6,"gallery":["https://i.postimg.cc/mz8hVnzM/2025-09-06-11-11-13.png"]}
+] /** END: DO NOT EDIT **/
+  
+const nameOf = (p:Product, lang:'ko'|'en') => (p?.name && (p.name as any)[lang]) || (p?.name as any)?.en || ''
+const descOf = (p:Product, lang:'ko'|'en') => (p?.desc && (p.desc as any)[lang]) || (p?.desc as any)?.en || ''
 
 export default function App(){
-  const [catalog, setCatalog] = React.useState<Product[]>([])
-  const [lang, setLang] = React.useState<'ko'|'en'>('en')
-  const [cat, setCat] = React.useState<'ALL'|Category>('ALL')
-  const [selectedProduct, setSelectedProduct] = React.useState<Product|null>(null)
-  const [qty, setQty] = React.useState(1)
-  const [slideIndex, setSlideIndex] = React.useState(0)
-  type CartItem = { id:string; name:string; price:number; image:string; qty:number }
-  const [cart, setCart] = React.useState<CartItem[]>([])
-  const [showCart, setShowCart] = React.useState(false)
-  const [showCheckout, setShowCheckout] = React.useState(false)
-  const [showLogin, setShowLogin] = React.useState(false)
-  const [isAdmin, setIsAdmin] = React.useState(false)
-  const fileRef = React.useRef<HTMLInputElement|null>(null)
-  const [exportScope, setExportScope] = React.useState<'all'|'current'>('all')
+  const [lang,setLang]=React.useState<'ko'|'en'>('en')
+  const [cur,setCur]=React.useState<'CAD'|'KRW'>('CAD')
+  const [cat,setCat]=React.useState<'ALL'|Category>('ALL')
 
-  const saveLocal = (data:Product[] = catalog) => { try { localStorage.setItem('om_catalog_json', JSON.stringify(data)) } catch {} }
-  const loadLocal = () => {
-    try {
-      const raw = localStorage.getItem('om_catalog_json')
-      if (raw) { setCatalog(JSON.parse(raw)); return true }
-    } catch {}
-    return false
-  }
+  const [selected,setSelected]=React.useState<Product|null>(null)
+  const [qty,setQty]=React.useState(1)
+  const [slide,setSlide]=React.useState(0)
+  const [cart,setCart]=React.useState<{p:Product;qty:number}[]>([])
+  const [showCart,setShowCart]=React.useState(false)
+  const [showCheckout,setShowCheckout]=React.useState(false)
 
-  React.useEffect(() => {
-    try { const v = localStorage.getItem('om_is_admin'); if (v === '1') setIsAdmin(true) } catch {}
-    const had = loadLocal()
-    if (!had) { setCatalog(DEFAULT_CATALOG); saveLocal(DEFAULT_CATALOG) }
-  }, [])
+  React.useEffect(()=>{ if(selected){ setQty(1); setSlide(0) } },[selected])
 
-  const displayed = (cat === 'ALL' ? catalog : catalog.filter(p => p && p.category === cat))
-    .filter(p => p && p.id && p.name && typeof (p.name as any).en === 'string')
-    .map(p => ({ ...p, name: { ko: asStr((p.name as any).ko), en: asStr((p.name as any).en) } }))
-
-  const subtotal = cart.reduce((s,c) => s + c.price * c.qty, 0)
-
-  const addToCart = (p?:Product) => {
-    if (!p || p.stock <= 0) return
-    const safeName = nameOf(p, lang) || 'Item'
-    setCart(prev => {
-      const ex = prev.find(ci => ci.id === p.id)
-      if (ex) return prev.map(ci => ci.id === p.id ? { ...ci, qty: ci.qty + qty } : ci)
-      return [...prev, { id:p.id, name:safeName, price:p.priceCad, image:p.image, qty }]
+  const displayed = cat==='ALL' ? CATALOG : CATALOG.filter(p=>p.category===cat)
+  const addToCart=(p:Product,q:number)=>{
+    if(p.stock<=0) return
+    setCart(prev=>{
+      const ex=prev.find(ci=>ci.p.id===p.id)
+      return ex? prev.map(ci=>ci.p.id===p.id?{...ci,qty:ci.qty+q}:ci) : [...prev,{p,qty:q}]
     })
     setShowCart(true)
   }
-
-  React.useEffect(() => { if (selectedProduct) { setQty(1); setSlideIndex(0) } }, [selectedProduct])
-
-  const onFile = (f:File) => {
-    const r = new FileReader()
-    r.onload = () => {
-      const text = (r.result || '').toString()
-      // very small CSV: name_en,name_ko,price_cad,image_url,desc_en,desc_ko,stock,category,gallery_urls
-      const rows = text.split(/\\r?\\n/).filter(Boolean)
-      const headers = rows.shift()!.split(',').map(s=>s.trim().toLowerCase())
-      const idx = (k:string) => headers.findIndex(h => h===k)
-      const list: Product[] = rows.map((line, i) => {
-        // naive CSV split (assumes no quoted commas)
-        const c = line.split(',').map(s=>s.trim())
-        const get = (k:string) => { const j = idx(k); return j>=0 ? (c[j]||'') : '' }
-        const gallery = (get('gallery_urls')||'').split('|').map(s=>s.trim()).filter(Boolean)
-        const price = parseFloat((get('price_cad')||'0').replace(/[^\\d.]/g,'')) || 0
-        const stock = parseInt(get('stock')||'0') || 0
-        const category = (get('category') as Category) || 'KOR_LIVING'
-        return {
-          id: `csv-${i+1}`,
-          name: { ko: get('name_ko')||get('name')||'', en: get('name_en')||get('name')||'' },
-          category, priceCad: price, image: get('image_url') || gallery[0] || '',
-          desc: { ko: get('desc_ko')||'', en: get('desc_en')||get('desc')||'' },
-          stock, gallery
-        }
-      })
-      setCatalog(list); saveLocal(list); alert(`[CSV Import] rows: ${list.length} (auto-saved)`)
-    }
-    r.readAsText(f)
-  }
-
-  const exportJson = () => {
-    const payload = exportScope === 'all' ? catalog : displayed
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = exportScope === 'all' ? 'omglobal_catalog.json' : 'omglobal_catalog_filtered.json'
-    a.style.display = 'none'
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-    setTimeout(() => URL.revokeObjectURL(url), 1500)
-    alert(`Export complete. Check your browser's Downloads folder.`)
-  }
+  const subtotal = cart.reduce((s,ci)=>s+ci.p.priceCad*ci.qty,0)
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
+      {/* Header */}
       <header className="sticky top-0 z-10 bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center">
           <img src={LOGO} alt="logo" className="h-10 w-auto"/>
           <nav className="hidden md:flex gap-4 text-sm ml-6">
-            {(['ALL','KOR_LIVING','CULTURE','CA_FOODS','TOOLS','RAW'] as const).map(c => (
-              <button key={c} onClick={() => setCat(c)} className={"px-2 py-1 rounded hover:bg-slate-100 "+(cat===c?"font-bold underline":"")}>{c}</button>
+            {(['ALL','KOR_LIVING','CULTURE','CA_FOODS','TOOLS','RAW'] as const).map(c=>(
+              <button key={c} onClick={()=>setCat(c)} className={"px-2 py-1 rounded hover:bg-slate-100 "+(cat===c?"font-bold underline":"")}>{c}</button>
             ))}
           </nav>
           <div className="ml-auto flex items-center gap-2 text-sm">
-            {!isAdmin ? (
-              <button onClick={() => setShowLogin(true)} className="px-2 py-1 rounded hover:bg-slate-100">👤 Login</button>
-            ) : (
-              <>
-                <span className="px-2 py-1 text-green-700">Admin</span>
-                <button onClick={() => { setIsAdmin(false); try { localStorage.removeItem('om_is_admin') } catch {} }} className="px-2 py-1 rounded hover:bg-slate-100">Logout</button>
-              </>
-            )}
-            <button onClick={() => setShowCart(true)} className="px-2 py-1 rounded hover:bg-slate-100">🛒 Cart ({cart.length})</button>
+            <button onClick={()=>setLang(l=>l==='en'?'ko':'en')} className="px-2 py-1 rounded hover:bg-slate-100">
+              {lang==='en'?'🇰🇷 한글':'🇺🇸 EN'}
+            </button>
+            <button onClick={()=>setShowCart(true)} className="px-2 py-1 rounded hover:bg-slate-100">🛒 Cart ({cart.length})</button>
           </div>
         </div>
       </header>
 
-      {isAdmin && (
-        <div className="bg-amber-50 border-b">
-          <div className="max-w-7xl mx-auto px-4 py-2 text-sm flex flex-wrap gap-2 items-center">
-            <span className="font-medium mr-2">Admin Tools</span>
-            <button className="px-2 py-1 border rounded bg-white" onClick={() => fileRef.current?.click()}>Import CSV</button>
-            <input ref={fileRef} type="file" accept=".csv" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) onFile(f) }}/>
-            <button className="px-2 py-1 border rounded bg-white" onClick={() => saveLocal()}>Save</button>
-            <div className="flex items-center gap-1">
-              <button className="px-2 py-1 border rounded bg-white" onClick={exportJson}>Export JSON</button>
-              <label className="text-xs ml-1">Scope:</label>
-              <select value={exportScope} onChange={e=>setExportScope(e.target.value as 'all'|'current')} className="border rounded text-xs px-1 py-0.5">
-                <option value="all">All</option>
-                <option value="current">Filtered</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      )}
-
+      {/* Hero */}
       <section className="bg-black/90 text-white py-12">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-center px-6">
           <div>
@@ -186,49 +119,16 @@ export default function App(){
         </div>
       </section>
 
-      {showLogin && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-          <div className="bg-white rounded-lg p-6 w-full max-w-sm relative">
-            <button className="absolute top-2 right-2" onClick={()=>setShowLogin(false)}>✖</button>
-            <h3 className="text-lg font-semibold mb-2">Admin Login</h3>
-            <p className="text-sm text-slate-600 mb-4">Enter access code to enable admin tools.</p>
-            <input
-              autoFocus
-              type="password"
-              placeholder="Access code (om-2025)"
-              className="w-full border rounded px-3 py-2 mb-3"
-              onKeyDown={e=>{ if(e.key==='Enter'){ 
-                const code = (e.target as HTMLInputElement).value
-                if ((code||'').trim()==='om-2025'){ setIsAdmin(true); try{localStorage.setItem('om_is_admin','1')}catch{}; setShowLogin(false) } else alert('Invalid code')
-              } }}
-            />
-            <div className="flex justify-end gap-2">
-              <button className="px-3 py-2 border rounded" onClick={()=>setShowLogin(false)}>Cancel</button>
-              <button className="px-3 py-2 bg-slate-900 text-white rounded" onClick={()=>{
-                const el = document.querySelector<HTMLInputElement>('input[type="password"]')
-                const code = el?.value || ''
-                if ((code||'').trim()==='om-2025'){ setIsAdmin(true); try{localStorage.setItem('om_is_admin','1')}catch{}; setShowLogin(false) } else alert('Invalid code')
-              }}>Login</button>
-            </div>
-          </div>
-        </div>
-      )}
-
+      {/* Featured */}
       <section className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold" style={museo}>Featured Products</h2>
-          <div className="flex gap-2 text-sm">
-            <button onClick={() => setLang('en')} className={`px-2 py-1 border rounded ${lang==='en'?'font-bold':''}`}>EN</button>
-            <button onClick={() => setLang('ko')} className={`px-2 py-1 border rounded ${lang==='ko'?'font-bold':''}`}>KO</button>
-          </div>
-        </div>
+        <h2 className="text-xl font-semibold mb-4" style={museo}>Featured Products</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {displayed.slice(0,12).map(p => (
-            <article key={p.id} onClick={() => setSelectedProduct(p)} className="bg-white rounded-xl border hover:shadow-md transition overflow-hidden cursor-pointer">
-              <div className="aspect-[4/3] bg-slate-100"><img src={p.image} alt={nameOf(p, lang)} className="w-full h-full object-cover"/></div>
+          {displayed.slice(0,12).map(p=>(
+            <article key={p.id} onClick={()=>setSelected(p)} className="bg-white rounded-xl border hover:shadow-md transition overflow-hidden cursor-pointer">
+              <div className="aspect-[4/3] bg-slate-100"><img src={p.image} alt={nameOf(p,'en')} className="w-full h-full object-cover"/></div>
               <div className="p-3">
-                <div className="text-sm font-medium line-clamp-1" style={museo}>{nameOf(p, lang)}</div>
-                <div className="text-xs text-slate-500 line-clamp-2">{descOf(p, lang)}</div>
+                <div className="text-sm font-medium line-clamp-1" style={museo}>{nameOf(p,lang)}</div>
+                <div className="text-xs text-slate-500 line-clamp-2">{descOf(p,lang)}</div>
                 <div className="mt-2 font-semibold text-slate-900">CAD ${p.priceCad.toFixed(2)}</div>
               </div>
             </article>
@@ -236,90 +136,81 @@ export default function App(){
         </div>
       </section>
 
-      {selectedProduct && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-40">
+      {/* Product Modal */}
+      {selected && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-20">
           <div className="bg-white rounded-lg max-w-lg w-full p-6 relative">
-            <button onClick={() => setSelectedProduct(null)} className="absolute top-2 right-2">✖</button>
+            <button onClick={()=>setSelected(null)} className="absolute top-2 right-2">✖</button>
             <div className="relative">
-              <img
-                src={(selectedProduct.gallery && selectedProduct.gallery[slideIndex]) || selectedProduct.image}
-                alt={nameOf(selectedProduct, lang)}
-                className="w-full h-60 object-cover rounded"
-              />
-              {selectedProduct.gallery && selectedProduct.gallery.length > 1 && (
+              <img src={(selected.gallery && selected.gallery[slide])||selected.image} alt={nameOf(selected,'en')} className="w-full h-60 object-cover rounded"/>
+              {selected.gallery && selected.gallery.length>1 && (
                 <>
-                  <button
-                    onClick={() => setSlideIndex((slideIndex - 1 + selectedProduct.gallery!.length) % selectedProduct.gallery!.length)}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white px-2 py-1 rounded"
-                  >‹</button>
-                  <button
-                    onClick={() => setSlideIndex((slideIndex + 1) % selectedProduct.gallery!.length)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white px-2 py-1 rounded"
-                  >›</button>
+                  <button onClick={()=>setSlide((slide-1+selected.gallery!.length)%selected.gallery!.length)} className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white px-2 py-1 rounded">‹</button>
+                  <button onClick={()=>setSlide((slide+1)%selected.gallery!.length)} className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white px-2 py-1 rounded">›</button>
                 </>
               )}
             </div>
-            <h3 className="mt-4 text-xl font-semibold" style={museo}>{nameOf(selectedProduct, lang)}</h3>
-            <p className="text-slate-600">{descOf(selectedProduct, lang)}</p>
-            <div className="mt-2 font-semibold">CAD ${selectedProduct.priceCad.toFixed(2)}</div>
+            <h3 className="mt-4 text-xl font-semibold" style={museo}>{nameOf(selected,lang)}</h3>
+            <p className="text-slate-600">{descOf(selected,lang)}</p>
+            <div className="mt-2 font-semibold">CAD ${selected.priceCad.toFixed(2)}</div>
+
+            {/* Options */}
+            {selected.options && selected.options.length>0 && (
+              <div className="mt-3 space-y-2">
+                {selected.options.map((opt,i)=>(
+                  <div key={i} className="flex items-center gap-2">
+                    <label className="text-sm w-24">{opt.label}</label>
+                    <select className="border rounded px-2 py-1 flex-1">
+                      {opt.values.map(v=>(<option key={v}>{v}</option>))}
+                    </select>
+                  </div>
+                ))}
+              </div>
+            )}
+
             <div className="mt-4 flex items-center gap-3">
               <label className="text-sm">Qty</label>
-              <input
-                type="number"
-                min={1}
-                max={selectedProduct.stock || 99}
-                value={qty}
-                onChange={e => setQty(Math.max(1, Math.min(Number(e.target.value || 1), selectedProduct.stock || 99)))}
-                className="w-20 border rounded px-2 py-1"
-              />
+              <input type="number" min={1} max={selected.stock||99} value={qty} onChange={e=>setQty(Math.max(1,Math.min(Number(e.target.value||1),selected.stock||99)))} className="w-20 border rounded px-2 py-1"/>
             </div>
             <div className="mt-4 flex gap-3">
-              <button
-                disabled={selectedProduct.stock <= 0}
-                className="px-4 py-2 rounded bg-slate-900 text-white disabled:opacity-50"
-                onClick={() => addToCart(selectedProduct)}
-              >{selectedProduct.stock > 0 ? 'Add to Cart' : 'Sold Out'}</button>
-              <button
-                disabled={selectedProduct.stock <= 0}
-                className="px-4 py-2 rounded border disabled:opacity-50"
-                onClick={() => { if (selectedProduct.stock > 0) { addToCart(selectedProduct); setShowCheckout(true) } }}
-              >Buy Now</button>
+              <button disabled={selected.stock<=0} className="px-4 py-2 rounded bg-slate-900 text-white disabled:opacity-50" onClick={()=>addToCart(selected,qty)}>{selected.stock>0?"Add to Cart":"Sold Out"}</button>
+              <button disabled={selected.stock<=0} className="px-4 py-2 rounded border disabled:opacity-50" onClick={()=>{ if(selected.stock>0){ addToCart(selected,qty); setShowCheckout(true); }}}>Buy Now</button>
             </div>
           </div>
         </div>
       )}
 
+      {/* Cart Modal */}
       {showCart && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-30">
           <div className="bg-white rounded-lg max-w-md w-full p-6 relative">
-            <button onClick={() => setShowCart(false)} className="absolute top-2 right-2">✖</button>
+            <button onClick={()=>setShowCart(false)} className="absolute top-2 right-2">✖</button>
             <h3 className="text-lg font-semibold mb-4">Your Cart</h3>
-            {cart.length ? (
+            {cart.length? (
               <div className="space-y-3">
-                {cart.map(ci => (
-                  <div key={ci.id} className="flex items-center gap-3">
-                    <div className="w-16 h-16 bg-slate-100 rounded overflow-hidden">
-                      <img src={ci.image} alt={ci.name} className="w-full h-full object-cover"/>
-                    </div>
+                {cart.map(ci=>(
+                  <div key={ci.p.id} className="flex items-center gap-3">
+                    <div className="w-16 h-16 bg-slate-100 rounded overflow-hidden"><img src={ci.p.image} alt={nameOf(ci.p,'en')} className="w-full h-full object-cover"/></div>
                     <div>
-                      <div className="font-medium">{ci.name}</div>
+                      <div className="font-medium">{nameOf(ci.p,lang)}</div>
                       <div className="text-slate-600">Qty: {ci.qty}</div>
-                      <div className="font-semibold">Subtotal: CAD {(ci.price * ci.qty).toFixed(2)}</div>
+                      <div className="font-semibold">Subtotal: CAD {(ci.p.priceCad*ci.qty).toFixed(2)}</div>
                     </div>
                   </div>
                 ))}
                 <div className="mt-4 font-semibold">Total: CAD {subtotal.toFixed(2)}</div>
-                <button className="mt-4 w-full bg-slate-900 text-white rounded px-3 py-2" onClick={() => { setShowCart(false); setShowCheckout(true) }}>Proceed to Checkout</button>
+                <button className="mt-4 w-full bg-slate-900 text-white rounded px-3 py-2" onClick={()=>{setShowCart(false);setShowCheckout(true)}}>Proceed to Checkout</button>
               </div>
-            ) : <p>Your cart is empty.</p>}
+            ):<p>Your cart is empty.</p>}
           </div>
         </div>
       )}
 
+      {/* Checkout Modal */}
       {showCheckout && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-40">
           <div className="bg-white rounded-lg max-w-md w-full p-6 relative">
-            <button onClick={() => setShowCheckout(false)} className="absolute top-2 right-2">✖</button>
+            <button onClick={()=>setShowCheckout(false)} className="absolute top-2 right-2">✖</button>
             <h3 className="text-lg font-semibold mb-4">Checkout</h3>
             <div className="space-y-3 mb-4">
               <input className="w-full border rounded px-3 py-2" placeholder="Full Name"/>
@@ -330,11 +221,12 @@ export default function App(){
               <div className="font-medium mb-1">Amazon Buy with Prime (placeholder)</div>
               <p>Enable Buy with Prime here. Orders will be fulfilled via Amazon when available.</p>
             </div>
-            <button className="w-full bg-slate-900 text-white rounded px-3 py-2" onClick={() => alert('Checkout submitted')}>Place Order</button>
+            <button className="w-full bg-slate-900 text-white rounded px-3 py-2" onClick={()=>alert("Checkout submitted")}>Place Order</button>
           </div>
         </div>
       )}
 
+      {/* Footer */}
       <footer className="mt-auto bg-gray-100 border-t py-6 text-center text-sm text-gray-600">
         <p>Return & Refund Policy · Shipping Policy · Privacy Policy</p>
         <p className="mt-2">© 2025 OM Global Trade. All rights reserved.</p>
