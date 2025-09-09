@@ -127,7 +127,7 @@ export default function App(){
     a.click()
     a.remove()
     setTimeout(() => URL.revokeObjectURL(url), 1500)
-    alert('Export complete. Check your browser\\'s Downloads folder.')
+    alert(`Export complete. Check your browser's Downloads folder.`)
   }
 
   return (
