@@ -307,7 +307,7 @@ export default function App(){
   }
 
   const doLogin = () => {
-    if (pwd.trim() === "om-2025"){
+    if (pwd.trim() === "*******"){
       setIsAdmin(true)
       localStorage.setItem(STORAGE_ADMIN_KEY, "1")
       setShowLogin(false)
