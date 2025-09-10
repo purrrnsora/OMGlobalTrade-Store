@@ -187,6 +187,9 @@ export default function App(){
   const [jsonURL,setJsonURL]=React.useState<string>(() => localStorage.getItem(STORAGE_URL_KEY) || "")
   const [catalog,setCatalog]=React.useState<Product[]>(CATALOG_EMBED)
 
+  // 선택된 옵션 값 저장
+  const [selectedOpts, setSelectedOpts] = React.useState<Record<string, string>>({});
+
   // Initial load: local JSON -> URL -> embedded
   React.useEffect(()=>{
   const loadDefault = async () => {
@@ -222,6 +225,19 @@ export default function App(){
   }
   loadDefault()
 },[])
+
+// 상품이 선택될 때마다 옵션 기본값 자동 세팅
+React.useEffect(() => {
+  if (selected && selected.options) {
+    const defaults: Record<string,string> = {}
+    selected.options.forEach(opt => {
+      if (opt.values && opt.values.length > 0) {
+        defaults[opt.label] = opt.values[0]   // 각 옵션의 첫 번째 값을 기본 선택
+      }
+    })
+    setSelectedOpts(defaults)
+  }
+}, [selected])
   
   const displayed = cat==="ALL" ? catalog : catalog.filter(p=>p.category===cat)
   const subtotal = cart.reduce((s,ci)=>s+ci.p.price_cad*ci.qty,0)
