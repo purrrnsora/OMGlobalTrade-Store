@@ -307,7 +307,7 @@ export default function App(){
   }
 
   const doLogin = () => {
-    if (pwd.trim() === "*******"){
+    if (pwd.trim() === "om-2025"){
       setIsAdmin(true)
       localStorage.setItem(STORAGE_ADMIN_KEY, "1")
       setShowLogin(false)
@@ -490,7 +490,7 @@ export default function App(){
           <div className="bg-white rounded-lg w-full max-w-sm p-6 relative">
             <button onClick={()=>setShowLogin(false)} className="absolute top-2 right-2">✖</button>
             <h3 className="text-lg font-semibold mb-3">Admin Login</h3>
-            <input type="password" value={pwd} onChange={e=>setPwd(e.target.value)} className="w-full border rounded px-3 py-2 mb-3" placeholder="Enter code (om-2025)"/>
+            <input type="password" value={pwd} onChange={e=>setPwd(e.target.value)} className="w-full border rounded px-3 py-2 mb-3" placeholder=""/>
             <button onClick={doLogin} className="w-full bg-slate-900 text-white rounded px-3 py-2">Login</button>
           </div>
         </div>
