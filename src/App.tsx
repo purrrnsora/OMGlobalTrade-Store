@@ -220,9 +220,7 @@ export default function App(){
   }
   loadDefault()
 },[])
-
-  localStorage.setItem('om_catalog_url', url)
-
+  
   const displayed = cat==="ALL" ? catalog : catalog.filter(p=>p.category===cat)
   const subtotal = cart.reduce((s,ci)=>s+ci.p.priceCad*ci.qty,0)
 
