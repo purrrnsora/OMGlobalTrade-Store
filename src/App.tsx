@@ -1,9 +1,9 @@
-// OM Global Trade – Fixed storefront with Admin tools
-// - Always-visible embedded catalog (25 items)
-// - Admin login (om-2025) -> CSV Import / Save / Export / JSON URL Load & Clear
-// - Product modal with image slider & options
-// - Multi-item cart & simple checkout
-// - Price parsing & CSV parsing robust; Vercel-friendly strings
+// OM Global Trade – Fixed storefront with Admin tools + Options end-to-end
+// - 25개 임베드 카탈로그 항상 노출
+// - Admin 로그인(om-2025) → CSV Import / Save(local) / Export JSON / JSON URL Load & Clear
+// - 상품 모달(이미지 슬라이드, 옵션 선택, 수량, 품절 처리)
+// - 멀티 아이템 카트, 합계, 간단 체크아웃
+// - CSV/JSON 파싱 가격 안정화(parsePrice) + 모든 렌더는 price_cad 사용
 
 import * as React from "react"
 
@@ -21,18 +21,18 @@ interface Product {
   gallery?: string[]
 }
 
-const DEFAULT_JSON_URL = "https://www.omglobaltrade.shop/omglobal_catalog.json"
 const museo = { fontFamily: "MuseoModerno, ui-sans-serif, system-ui" }
 const LOGO = "https://i.postimg.cc/vBDBgY03/IMG-3298.jpg"
+
+// 공개 JSON 기본 경로(있으면 우선로드, 실패시 LocalStorage→내장 순서로 폴백)
+const DEFAULT_JSON_URL = "https://www.omglobaltrade.shop/omglobal_catalog.json"
 const STORAGE_JSON_KEY = "om_catalog_json"
 const STORAGE_URL_KEY = "om_catalog_url"
 const STORAGE_ADMIN_KEY = "om_is_admin"
-const price = (p: Product) => Number(p?.price_cad ?? 0)
 
-
-// ===== Embedded catalog (25) =====
+// ========== 25개 임베드 카탈로그 ==========
 const CATALOG_EMBED: Product[] = [
-  {"id":"p-0001","name":{"ko":"규조토 발매트","en":"Diatomite Bath Mat"},"category":"KOR_LIVING","price_cad":22,"image":"https://i.postimg.cc/kBjDWL3d/2025-09-04-10-24-45.png","desc":{"ko":"빠른 건조, 흡수력 우수","en":"Quick-dry absorbent bath mat"},"stock":120,"rating":4.8,"gallery":["https://i.postimg.cc/kBjDWL3d/2025-09-04-10-24-45.png","https://i.postimg.cc/9rfQX14g/2025-09-04-10-25-49.png"]},
+  {"id":"p-0001","name":{"ko":"규조토 발매트","en":"Diatomite Bath Mat"},"category":"KOR_LIVING","price_cad":22,"image":"https://i.postimg.cc/kBjDWL3d/2025-09-04-10-24-45.png","desc":{"ko":"빠른 건조, 흡수력 우수","en":"Quick-dry absorbent bath mat"},"stock":120,"rating":4.8,"gallery":["https://i.postimg.cc/kBjDWL3d/2025-09-04-10-24-45.png","https://i.postimg.cc/9rfQX14g/2025-09-04-10-25-49.png"],"options":[{"label":"색상","values":["화이트","그레이"]},{"label":"사이즈","values":["소","중","대"]}]},
   {"id":"p-0002","name":{"ko":"스테인리스 집게(20p)","en":"Stainless Pegs (20p)"},"category":"KOR_LIVING","price_cad":13,"image":"https://i.postimg.cc/Yvh0R8ML/2025-09-04-10-25-03.png","desc":{"ko":"녹 방지 강력 집게","en":"Rust-proof strong pegs"},"stock":200,"rating":4.8,"gallery":["https://i.postimg.cc/Yvh0R8ML/2025-09-04-10-25-03.png"]},
   {"id":"p-0003","name":{"ko":"김치 보관용기 5L","en":"Kimchi Keeper 5L"},"category":"KOR_LIVING","price_cad":24.5,"image":"https://i.postimg.cc/1nRL071L/2025-09-05-6-49-53.png","desc":{"ko":"밀폐력 좋은 김치 전용기","en":"Odor-sealed airtight kimchi container"},"stock":80,"rating":4.8,"gallery":["https://i.postimg.cc/1nRL071L/2025-09-05-6-49-53.png"]},
   {"id":"p-0004","name":{"ko":"대나무 칫솔(4개)","en":"Bamboo Toothbrush 4-pack"},"category":"KOR_LIVING","price_cad":9.9,"image":"https://i.postimg.cc/75V91HPZ/2025-09-05-7-01-08.png","desc":{"ko":"친환경 생분해 칫솔","en":"Eco-friendly biodegradable toothbrushes"},"stock":300,"rating":4.8,"gallery":["https://i.postimg.cc/75V91HPZ/2025-09-05-7-01-08.png"]},
@@ -64,26 +64,20 @@ const CATALOG_EMBED: Product[] = [
   {"id":"p-0025","name":{"ko":"방수 셀프 접착시트","en":"Waterproof Self-adhesive Sheet"},"category":"KOR_LIVING","price_cad":10.9,"image":"https://i.postimg.cc/mz8hVnzM/2025-09-06-11-11-13.png","desc":{"ko":"간편 시공 인테리어","en":"Easy DIY interior sheet"},"stock":170,"rating":4.6,"gallery":["https://i.postimg.cc/mz8hVnzM/2025-09-06-11-11-13.png"]}
 ]
 
-// ===== Utils =====
+// ========== Utils ==========
 const allowedCats: Category[] = ["KOR_LIVING","CULTURE","CA_FOODS","TOOLS","RAW"]
 const asStr = (v:any) => typeof v === "string" ? v : v == null ? "" : String(v)
 const splitPipes = (v:any): string[] => asStr(v).split("|").map(s=>s.trim()).filter(Boolean)
 const nameOf = (p:Product, lang:"ko"|"en") => (p?.name && ((p.name as any)[lang] || (p.name as any).en)) || ""
 const descOf = (p:Product, lang:"ko"|"en") => (p?.desc && ((p.desc as any)[lang] || (p.desc as any).en)) || ""
 
-// Robust CSV parser (quoted cells OK)
 function parseCSV(csv: string): any[] {
   const raw = csv ? (csv.charCodeAt(0) === 0xFEFF ? csv.slice(1) : csv) : ""
   const split = (line: string): string[] => {
-    const out: string[] = []
-    let cur = ""
-    let inQ = false
+    const out: string[] = []; let cur = ""; let inQ = false
     for (let i = 0; i < line.length; i++) {
       const ch = line[i]
-      if (ch === "\"") {
-        if (inQ && line[i+1] === "\"") { cur += "\""; i++; continue }
-        inQ = !inQ; continue
-      }
+      if (ch === "\"") { if (inQ && line[i+1] === "\"") { cur += "\""; i++; continue } inQ = !inQ; continue }
       if (ch === "," && !inQ) { out.push(cur); cur = ""; continue }
       cur += ch
     }
@@ -121,11 +115,7 @@ function parseCSV(csv: string): any[] {
 function parsePrice(v:any): number {
   let t = asStr(v).trim()
   if (!t) return 0
-  if (/^[0-9,]+$/.test(t)) { // only digits/commas
-    t = t.replace(/,/g,"")
-    const n = parseInt(t,10)
-    return Number.isFinite(n)?n:0
-  }
+  if (/^[0-9,]+$/.test(t)) { t = t.replace(/,/g,""); const n = parseInt(t,10); return Number.isFinite(n)?n:0 }
   t = t.replace(/[^0-9.\-]/g, "")
   const dots = (t.match(/\./g)||[]).length
   if (dots>1) { const parts=t.split("."); const last=parts.pop() as string; t=parts.join("")+"."+last }
@@ -138,9 +128,7 @@ function normalizeProduct(raw:any, i:number): Product {
   const nameEn = raw?.name?.en ?? raw?.name_en ?? raw?.name ?? ""
   const descKo = raw?.desc?.ko ?? raw?.desc_ko ?? ""
   const descEn = raw?.desc?.en ?? raw?.desc_en ?? raw?.desc ?? ""
-  const gallery: string[] = Array.isArray(raw?.gallery)
-    ? (raw.gallery as any[]).map(asStr).filter(Boolean)
-    : splitPipes(raw?.gallery_urls)
+  const gallery: string[] = Array.isArray(raw?.gallery) ? (raw.gallery as any[]).map(asStr).filter(Boolean) : splitPipes(raw?.gallery_urls)
   const image = asStr(raw?.image_url || raw?.image || gallery[0] || "")
   const catRaw = asStr(raw?.category).toUpperCase() as Category
   const category: Category = allowedCats.includes(catRaw) ? catRaw : "KOR_LIVING"
@@ -149,9 +137,7 @@ function normalizeProduct(raw:any, i:number): Product {
   const options: {label:string;values:string[]}[] = []
   if (opt1L && opt1V.length) options.push({label:opt1L, values:opt1V})
   if (opt2L && opt2V.length) options.push({label:opt2L, values:opt2V})
-  const priceNum = parsePrice(
-    raw?.price_cad ?? raw?.price ?? raw?.priceCad
-  )
+  const priceNum = parsePrice(raw?.price_cad ?? raw?.price ?? raw?.priceCad)
   const stockNum = parseInt(asStr(raw?.stock))
   return {
     id: asStr(raw?.id) || `csv-${i+1}`,
@@ -174,79 +160,78 @@ function normalizeCatalog(list:any[]): Product[] {
 export default function App(){
   const [lang,setLang]=React.useState<"ko"|"en">("en")
   const [cat,setCat]=React.useState<"ALL"|Category>("ALL")
+  const [catalog,setCatalog]=React.useState<Product[]>(CATALOG_EMBED)
+
   const [selected,setSelected]=React.useState<Product|null>(null)
   const [qty,setQty]=React.useState(1)
   const [slide,setSlide]=React.useState(0)
-  const [cart,setCart]=React.useState<{p:Product;qty:number}[]>([])
+  const [cart,setCart]=React.useState<{p:Product;qty:number;opts?:Record<string,string>}[]>([])
   const [showCart,setShowCart]=React.useState(false)
   const [showCheckout,setShowCheckout]=React.useState(false)
 
+  // 옵션 선택 상태
+  const [selectedOpts, setSelectedOpts] = React.useState<Record<string,string>>({})
+
+  // Admin
   const [isAdmin,setIsAdmin]=React.useState<boolean>(() => localStorage.getItem(STORAGE_ADMIN_KEY)==="1")
   const [showLogin,setShowLogin]=React.useState(false)
   const [pwd,setPwd]=React.useState("")
   const [jsonURL,setJsonURL]=React.useState<string>(() => localStorage.getItem(STORAGE_URL_KEY) || "")
-  const [catalog,setCatalog]=React.useState<Product[]>(CATALOG_EMBED)
 
-  // 선택된 옵션 값 저장
-  const [selectedOpts, setSelectedOpts] = React.useState<Record<string, string>>({});
-
-  // Initial load: local JSON -> URL -> embedded
+  // 초기 로드: 공개 JSON → LocalStorage(JSON/URL) → 임베드
   React.useEffect(()=>{
-  const loadDefault = async () => {
-    try {
-      // 1️⃣ 공용 JSON URL 우선
-      const res = await fetch(DEFAULT_JSON_URL)
-      const data = await res.json()
-      const norm = normalizeCatalog(data)
-      if (norm.length) {
-        setCatalog(norm)
-        return
-      }
-    } catch(e) {
-      console.warn("Default URL load failed, fallback to local/embedded")
-    }
-
-    try {
-      // 2️⃣ 로컬스토리지 → URL → 임베드 순서로 fallback
-      const saved = localStorage.getItem(STORAGE_JSON_KEY)
-      if (saved){
-        const parsed = JSON.parse(saved)
-        const norm = normalizeCatalog(parsed)
-        if (norm.length){ setCatalog(norm); return }
-      }
-      const url = localStorage.getItem(STORAGE_URL_KEY)
-      if (url){
-        fetch(url).then(r=>r.json()).then((data)=>{
+    (async () => {
+      try {
+        const res = await fetch(DEFAULT_JSON_URL, { cache: "no-store" })
+        if (res.ok) {
+          const data = await res.json()
           const norm = normalizeCatalog(data)
-          if (norm.length){ setCatalog(norm) }
-        })
-      }
-    }catch{ /* fallback to embedded */ }
-  }
-  loadDefault()
-},[])
+          if (norm.length) { setCatalog(norm); return }
+        }
+      } catch { /* ignore */ }
 
-// 상품이 선택될 때마다 옵션 기본값 자동 세팅
-React.useEffect(() => {
-  if (selected && selected.options) {
-    const defaults: Record<string,string> = {}
-    selected.options.forEach(opt => {
-      if (opt.values && opt.values.length > 0) {
-        defaults[opt.label] = opt.values[0]   // 각 옵션의 첫 번째 값을 기본 선택
-      }
-    })
-    setSelectedOpts(defaults)
-  }
-}, [selected])
-  
+      try {
+        const saved = localStorage.getItem(STORAGE_JSON_KEY)
+        if (saved){
+          const parsed = JSON.parse(saved)
+          const norm = normalizeCatalog(parsed)
+          if (norm.length){ setCatalog(norm); return }
+        }
+        const url = localStorage.getItem(STORAGE_URL_KEY)
+        if (url){
+          const r = await fetch(url)
+          const data = await r.json()
+          const norm = normalizeCatalog(data)
+          if (norm.length){ setCatalog(norm); return }
+        }
+      }catch{ /* fallback to embed */ }
+    })()
+  },[])
+
+  // 상품 클릭 시: 옵션 기본값 + 수량/슬라이드 리셋
+  React.useEffect(()=> {
+    if (selected?.options && selected.options.length) {
+      const init: Record<string,string> = {}
+      selected.options.forEach(opt => { init[opt.label] = opt.values[0] })
+      setSelectedOpts(init)
+    } else {
+      setSelectedOpts({})
+    }
+    if (selected) { setQty(1); setSlide(0) }
+  }, [selected])
+
   const displayed = cat==="ALL" ? catalog : catalog.filter(p=>p.category===cat)
   const subtotal = cart.reduce((s,ci)=>s+ci.p.price_cad*ci.qty,0)
 
-  const addToCart=(p:Product,q:number)=>{
+  const addToCart=(p:Product,q:number,opts:Record<string,string>)=>{
     if(p.stock<=0) return
     setCart(prev=>{
-      const ex=prev.find(ci=>ci.p.id===p.id)
-      return ex? prev.map(ci=>ci.p.id===p.id?{...ci,qty:ci.qty+q}:ci) : [...prev,{p,qty:q}]
+      const k = JSON.stringify(opts||{})
+      const exIndex = prev.findIndex(ci => ci.p.id===p.id && JSON.stringify(ci.opts||{})===k)
+      if (exIndex>=0){
+        const next = [...prev]; next[exIndex] = {...next[exIndex], qty: next[exIndex].qty + q}; return next
+      }
+      return [...prev,{p,qty:q,opts}]
     })
     setShowCart(true)
   }
@@ -261,43 +246,30 @@ React.useEffect(() => {
         const norm = normalizeCatalog(rows)
         if (!norm.length){ alert("No valid rows in CSV"); return }
         setCatalog(norm)
-        try {
-          localStorage.setItem(STORAGE_JSON_KEY, JSON.stringify(norm))
-          alert("Imported & saved locally.")
-        } catch {}
+        try { localStorage.setItem(STORAGE_JSON_KEY, JSON.stringify(norm)) } catch {}
+        alert("Imported & saved locally.")
       } catch (e) {
-        console.error(e)
-        alert("CSV import failed.")
+        console.error(e); alert("CSV import failed.")
       }
     }
     r.readAsText(f)
   }
 
   const saveLocal = () => {
-    try{
-      localStorage.setItem(STORAGE_JSON_KEY, JSON.stringify(catalog))
-      alert("Saved to this browser.")
-    }catch(e){ console.error(e); alert("Save failed.") }
+    try{ localStorage.setItem(STORAGE_JSON_KEY, JSON.stringify(catalog)); alert("Saved to this browser.") }
+    catch(e){ console.error(e); alert("Save failed.") }
   }
 
   const exportJson = () => {
     try{
-      const payload = catalog
-      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" })
+      const blob = new Blob([JSON.stringify(catalog, null, 2)], { type: "application/json" })
       const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
-      a.href = url
-      a.download = "omglobal_catalog.json"
-      a.style.display = "none"
-      document.body.appendChild(a)
-      a.click()
-      a.remove()
+      a.href = url; a.download = "omglobal_catalog.json"; a.style.display = "none"
+      document.body.appendChild(a); a.click(); a.remove()
       setTimeout(() => URL.revokeObjectURL(url), 1500)
-      alert("Export complete. Check your browser Downloads.")
-    }catch(e){
-      console.error(e)
-      alert("Export failed.")
-    }
+      alert(`Export complete. Check your browser's Downloads folder.`)
+    }catch(e){ console.error(e); alert("Export failed.") }
   }
 
   const loadFromURL = async () => {
@@ -311,31 +283,16 @@ React.useEffect(() => {
       localStorage.setItem(STORAGE_URL_KEY, jsonURL)
       localStorage.setItem(STORAGE_JSON_KEY, JSON.stringify(norm))
       alert("Loaded from URL & saved as default.")
-    }catch(e){
-      console.error(e)
-      alert("Load failed. Check CORS/URL/content.")
-    }
+    }catch(e){ console.error(e); alert("Load failed. Check CORS/URL/content.") }
   }
 
-  const clearURL = () => {
-    localStorage.removeItem(STORAGE_URL_KEY)
-    alert("Cleared saved JSON URL.")
-  }
+  const clearURL = () => { localStorage.removeItem(STORAGE_URL_KEY); alert("Cleared saved JSON URL.") }
 
   const doLogin = () => {
-    if (pwd.trim() === "om-2025"){
-      setIsAdmin(true)
-      localStorage.setItem(STORAGE_ADMIN_KEY, "1")
-      setShowLogin(false)
-      setPwd("")
-    } else {
-      alert("Invalid code.")
-    }
+    if (pwd.trim() === "om-2025"){ setIsAdmin(true); localStorage.setItem(STORAGE_ADMIN_KEY,"1"); setShowLogin(false); setPwd("") }
+    else { alert("Invalid code.") }
   }
-  const doLogout = () => {
-    setIsAdmin(false)
-    localStorage.removeItem(STORAGE_ADMIN_KEY)
-  }
+  const doLogout = () => { setIsAdmin(false); localStorage.removeItem(STORAGE_ADMIN_KEY) }
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -429,12 +386,17 @@ React.useEffect(() => {
             <p className="text-slate-600">{descOf(selected,lang)}</p>
             <div className="mt-2 font-semibold">CAD ${selected.price_cad.toFixed(2)}</div>
 
+            {/* 옵션 */}
             {selected.options && selected.options.length>0 && (
               <div className="mt-3 space-y-2">
                 {selected.options.map((opt,i)=>(
                   <div key={i} className="flex items-center gap-2">
                     <label className="text-sm w-24">{opt.label}</label>
-                    <select className="border rounded px-2 py-1 flex-1">
+                    <select
+                      className="border rounded px-2 py-1 flex-1"
+                      value={selectedOpts[opt.label] || opt.values[0]}
+                      onChange={e => setSelectedOpts(prev => ({...prev, [opt.label]: e.target.value}))}
+                    >
                       {opt.values.map(v=>(<option key={v}>{v}</option>))}
                     </select>
                   </div>
@@ -447,8 +409,14 @@ React.useEffect(() => {
               <input type="number" min={1} max={selected.stock||99} value={qty} onChange={e=>setQty(Math.max(1,Math.min(Number(e.target.value||1),selected.stock||99)))} className="w-20 border rounded px-2 py-1"/>
             </div>
             <div className="mt-4 flex gap-3">
-              <button disabled={selected.stock<=0} className="px-4 py-2 rounded bg-slate-900 text-white disabled:opacity-50" onClick={()=>addToCart(selected,qty)}>{selected.stock>0 ? "Add to Cart" : "Sold Out"}</button>
-              <button disabled={selected.stock<=0} className="px-4 py-2 rounded border disabled:opacity-50" onClick={()=>{ if(selected.stock>0){ addToCart(selected,qty); setShowCheckout(true); }}}>Buy Now</button>
+              <button disabled={selected.stock<=0} className="px-4 py-2 rounded bg-slate-900 text-white disabled:opacity-50"
+                onClick={()=>addToCart(selected,qty,selectedOpts)}>
+                {selected.stock>0 ? "Add to Cart" : "Sold Out"}
+              </button>
+              <button disabled={selected.stock<=0} className="px-4 py-2 rounded border disabled:opacity-50"
+                onClick={()=>{ if(selected.stock>0){ addToCart(selected,qty,selectedOpts); setShowCheckout(true) }}}>
+                Buy Now
+              </button>
             </div>
           </div>
         </div>
@@ -463,10 +431,17 @@ React.useEffect(() => {
             {cart.length? (
               <div className="space-y-3">
                 {cart.map(ci=>(
-                  <div key={ci.p.id} className="flex items-center gap-3">
+                  <div key={ci.p.id+JSON.stringify(ci.opts||{})} className="flex items-center gap-3">
                     <div className="w-16 h-16 bg-slate-100 rounded overflow-hidden"><img src={ci.p.image} alt={nameOf(ci.p,"en")} className="w-full h-full object-cover"/></div>
                     <div>
                       <div className="font-medium">{nameOf(ci.p,lang)}</div>
+                      {ci.opts && (
+                        <div className="text-xs text-slate-500">
+                          {Object.entries(ci.opts).map(([label,val])=>(
+                            <div key={label}>{label}: {val}</div>
+                          ))}
+                        </div>
+                      )}
                       <div className="text-slate-600">Qty: {ci.qty}</div>
                       <div className="font-semibold">Subtotal: CAD {(ci.p.price_cad*ci.qty).toFixed(2)}</div>
                     </div>
@@ -501,7 +476,8 @@ React.useEffect(() => {
       )}
 
       {/* Login Modal */}
-      {showLogin && (
+      {isAdmin && showLogin && null}
+      {(!isAdmin && showLogin) && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg w-full max-w-sm p-6 relative">
             <button onClick={()=>setShowLogin(false)} className="absolute top-2 right-2">✖</button>
