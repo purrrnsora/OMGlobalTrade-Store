@@ -4,6 +4,43 @@
 // - Product modal with image slider & options
 // - Multi-item cart & simple checkout
 // - Price parsing & CSV parsing robust; Vercel-friendly strings
+// 고정 카탈로그 URL (같은 오리진이라 CORS 걱정 없음)
+const DEFAULT_CATALOG_URL = '/omglobal_catalog.json';
+React.useEffect(() => {
+  (async () => {
+    try {
+      // 1) 고정 JSON 먼저 시도
+      const r = await fetch(DEFAULT_CATALOG_URL, { cache: 'no-store' });
+      if (r.ok) {
+        const data = await r.json();
+        const norm = normalizeCatalog(Array.isArray(data) ? data : (data.items || []));
+        if (norm.length) {
+          setCatalog(norm);
+          localStorage.setItem('om_catalog_json', JSON.stringify(norm)); // 로컬에도 캐시
+          return; // 성공했으면 끝
+        }
+      }
+    } catch {}
+    // 2) 실패 시, 기존 로직(저장된 URL/로컬 캐시/임베디드)로 폴백
+    try {
+      const saved = localStorage.getItem('om_catalog_json');
+      if (saved) {
+        const norm = normalizeCatalog(JSON.parse(saved));
+        if (norm.length) { setCatalog(norm); return; }
+      }
+      const url = localStorage.getItem('om_catalog_url');
+      if (url) {
+        const r = await fetch(url, { cache: 'no-store' });
+        const data = await r.json();
+        const norm = normalizeCatalog(Array.isArray(data) ? data : (data.items || []));
+        if (norm.length) { setCatalog(norm); return; }
+      }
+      // 3) 그래도 없으면 임베디드(있다면)로 폴백
+      // setCatalog(CATALOG_EMBED);
+    } catch {}
+  })();
+}, []);
+
 
 import * as React from "react"
 
@@ -26,8 +63,6 @@ const LOGO = "https://i.postimg.cc/vBDBgY03/IMG-3298.jpg"
 const STORAGE_JSON_KEY = "om_catalog_json"
 const STORAGE_URL_KEY = "om_catalog_url"
 const STORAGE_ADMIN_KEY = "om_is_admin"
-
-<script src="https://gist.github.com/purrrnsora/d375ba179c32e9c01e3c37ab0d69d46a.js"></script>
 
 // ===== Embedded catalog (25) =====
 const CATALOG_EMBED: Product[] = [
