@@ -27,6 +27,8 @@ const LOGO = "https://i.postimg.cc/vBDBgY03/IMG-3298.jpg"
 const STORAGE_JSON_KEY = "om_catalog_json"
 const STORAGE_URL_KEY = "om_catalog_url"
 const STORAGE_ADMIN_KEY = "om_is_admin"
+const price = (p: Product) => Number(p?.price_cad ?? 0)
+
 
 // ===== Embedded catalog (25) =====
 const CATALOG_EMBED: Product[] = [
@@ -222,7 +224,7 @@ export default function App(){
 },[])
   
   const displayed = cat==="ALL" ? catalog : catalog.filter(p=>p.category===cat)
-  const subtotal = cart.reduce((s,ci)=>s+ci.p.priceCad*ci.qty,0)
+  const subtotal = cart.reduce((s,ci)=>s+ci.p.price_cad*ci.qty,0)
 
   const addToCart=(p:Product,q:number)=>{
     if(p.stock<=0) return
@@ -386,7 +388,7 @@ export default function App(){
               <div className="p-3">
                 <div className="text-sm font-medium line-clamp-1" style={museo}>{nameOf(p,lang)}</div>
                 <div className="text-xs text-slate-500 line-clamp-2">{descOf(p,lang)}</div>
-                <div className="mt-2 font-semibold text-slate-900">CAD ${p.priceCad.toFixed(2)}</div>
+                <div className="mt-2 font-semibold text-slate-900">CAD ${p.price_cad.toFixed(2)}</div>
               </div>
             </article>
           ))}
@@ -409,7 +411,7 @@ export default function App(){
             </div>
             <h3 className="mt-4 text-xl font-semibold" style={museo}>{nameOf(selected,lang)}</h3>
             <p className="text-slate-600">{descOf(selected,lang)}</p>
-            <div className="mt-2 font-semibold">CAD ${selected.priceCad.toFixed(2)}</div>
+            <div className="mt-2 font-semibold">CAD ${selected.price_cad.toFixed(2)}</div>
 
             {selected.options && selected.options.length>0 && (
               <div className="mt-3 space-y-2">
@@ -450,7 +452,7 @@ export default function App(){
                     <div>
                       <div className="font-medium">{nameOf(ci.p,lang)}</div>
                       <div className="text-slate-600">Qty: {ci.qty}</div>
-                      <div className="font-semibold">Subtotal: CAD {(ci.p.priceCad*ci.qty).toFixed(2)}</div>
+                      <div className="font-semibold">Subtotal: CAD {(ci.p.price_cad*ci.qty).toFixed(2)}</div>
                     </div>
                   </div>
                 ))}
