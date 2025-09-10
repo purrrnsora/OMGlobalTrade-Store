@@ -4,43 +4,6 @@
 // - Product modal with image slider & options
 // - Multi-item cart & simple checkout
 // - Price parsing & CSV parsing robust; Vercel-friendly strings
-// 고정 카탈로그 URL (같은 오리진이라 CORS 걱정 없음)
-const DEFAULT_CATALOG_URL = '/omglobal_catalog.json';
-React.useEffect(() => {
-  (async () => {
-    try {
-      // 1) 고정 JSON 먼저 시도
-      const r = await fetch(DEFAULT_CATALOG_URL, { cache: 'no-store' });
-      if (r.ok) {
-        const data = await r.json();
-        const norm = normalizeCatalog(Array.isArray(data) ? data : (data.items || []));
-        if (norm.length) {
-          setCatalog(norm);
-          localStorage.setItem('om_catalog_json', JSON.stringify(norm)); // 로컬에도 캐시
-          return; // 성공했으면 끝
-        }
-      }
-    } catch {}
-    // 2) 실패 시, 기존 로직(저장된 URL/로컬 캐시/임베디드)로 폴백
-    try {
-      const saved = localStorage.getItem('om_catalog_json');
-      if (saved) {
-        const norm = normalizeCatalog(JSON.parse(saved));
-        if (norm.length) { setCatalog(norm); return; }
-      }
-      const url = localStorage.getItem('om_catalog_url');
-      if (url) {
-        const r = await fetch(url, { cache: 'no-store' });
-        const data = await r.json();
-        const norm = normalizeCatalog(Array.isArray(data) ? data : (data.items || []));
-        if (norm.length) { setCatalog(norm); return; }
-      }
-      // 3) 그래도 없으면 임베디드(있다면)로 폴백
-      // setCatalog(CATALOG_EMBED);
-    } catch {}
-  })();
-}, []);
-
 
 import * as React from "react"
 
@@ -58,6 +21,7 @@ interface Product {
   gallery?: string[]
 }
 
+const DEFAULT_JSON_URL = "https://www.omglobaltrade.shop/omglobal_catalog.json"
 const museo = { fontFamily: "MuseoModerno, ui-sans-serif, system-ui" }
 const LOGO = "https://i.postimg.cc/vBDBgY03/IMG-3298.jpg"
 const STORAGE_JSON_KEY = "om_catalog_json"
@@ -222,23 +186,41 @@ export default function App(){
   const [catalog,setCatalog]=React.useState<Product[]>(CATALOG_EMBED)
 
   // Initial load: local JSON -> URL -> embedded
-  React.useEffect(() => {
-  const savedUrl = localStorage.getItem('om_catalog_url') || ''
-  if (!savedUrl) return
-  ;(async () => {
+  React.useEffect(()=>{
+  const loadDefault = async () => {
     try {
-      const r = await fetch(savedUrl, { cache: 'no-store' })
-      const j = await r.json()
-      const normalized = normalizeCatalog(Array.isArray(j) ? j : (j.items || []))
-      if (normalized.length) {
-        setCatalog(normalized)
-        localStorage.setItem('om_catalog_json', JSON.stringify(normalized))
+      // 1️⃣ 공용 JSON URL 우선
+      const res = await fetch(DEFAULT_JSON_URL)
+      const data = await res.json()
+      const norm = normalizeCatalog(data)
+      if (norm.length) {
+        setCatalog(norm)
+        return
       }
-    } catch (e) {
-      console.error('Auto-load catalog failed', e)
+    } catch(e) {
+      console.warn("Default URL load failed, fallback to local/embedded")
     }
-  })()
-}, [])
+
+    try {
+      // 2️⃣ 로컬스토리지 → URL → 임베드 순서로 fallback
+      const saved = localStorage.getItem(STORAGE_JSON_KEY)
+      if (saved){
+        const parsed = JSON.parse(saved)
+        const norm = normalizeCatalog(parsed)
+        if (norm.length){ setCatalog(norm); return }
+      }
+      const url = localStorage.getItem(STORAGE_URL_KEY)
+      if (url){
+        fetch(url).then(r=>r.json()).then((data)=>{
+          const norm = normalizeCatalog(data)
+          if (norm.length){ setCatalog(norm) }
+        })
+      }
+    }catch{ /* fallback to embedded */ }
+  }
+  loadDefault()
+},[])
+
   localStorage.setItem('om_catalog_url', url)
 
   const displayed = cat==="ALL" ? catalog : catalog.filter(p=>p.category===cat)
