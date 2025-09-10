@@ -21,12 +21,12 @@ interface Product {
   gallery?: string[]
 }
 
+const DEFAULT_JSON_URL = "https://www.omglobaltrade.shop/omglobal_catalog.json"
 const museo = { fontFamily: "MuseoModerno, ui-sans-serif, system-ui" }
 const LOGO = "https://i.postimg.cc/vBDBgY03/IMG-3298.jpg"
 const STORAGE_JSON_KEY = "om_catalog_json"
 const STORAGE_URL_KEY = "om_catalog_url"
 const STORAGE_ADMIN_KEY = "om_is_admin"
-const DEFAULT_JSON_URL = "https://www.omglobaltrade.shop/omglobal_catalog.json"
 
 // ===== Embedded catalog (25) =====
 const CATALOG_EMBED: Product[] = [
