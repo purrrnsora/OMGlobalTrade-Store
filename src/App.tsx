@@ -28,7 +28,6 @@ const STORAGE_JSON_KEY = "om_catalog_json"
 const STORAGE_URL_KEY = "om_catalog_url"
 const STORAGE_ADMIN_KEY = "om_is_admin"
 const price = (p: Product) => Number(p?.price_cad ?? 0)
-const [cart, setCart] = React.useState<{p: Product; qty: number; opts?: Record<string,string>}[]>([])
 
 
 // ===== Embedded catalog (25) =====
@@ -243,18 +242,14 @@ React.useEffect(() => {
   const displayed = cat==="ALL" ? catalog : catalog.filter(p=>p.category===cat)
   const subtotal = cart.reduce((s,ci)=>s+ci.p.price_cad*ci.qty,0)
 
-  const addToCart = (p: Product, q: number, opts: Record<string,string> = {}) => {
-  if (p.stock <= 0) return
-  setCart(prev => {
-    const ex = prev.find(ci => ci.p.id === p.id && JSON.stringify(ci.opts) === JSON.stringify(opts))
-    return ex
-      ? prev.map(ci => (ci.p.id === p.id && JSON.stringify(ci.opts) === JSON.stringify(opts))
-          ? { ...ci, qty: ci.qty + q }
-          : ci)
-      : [...prev, { p, qty: q, opts }]
-  })
-  setShowCart(true)
-}
+  const addToCart=(p:Product,q:number)=>{
+    if(p.stock<=0) return
+    setCart(prev=>{
+      const ex=prev.find(ci=>ci.p.id===p.id)
+      return ex? prev.map(ci=>ci.p.id===p.id?{...ci,qty:ci.qty+q}:ci) : [...prev,{p,qty:q}]
+    })
+    setShowCart(true)
+  }
 
   // ===== Admin actions =====
   const onFile = (f:File) => {
@@ -417,48 +412,47 @@ React.useEffect(() => {
       </section>
 
       {/* Product Modal */}
-      <div className="mt-4 flex gap-3">
-  <button
-    disabled={selected.stock<=0}
-    className="px-4 py-2 rounded bg-slate-900 text-white disabled:opacity-50"
-    onClick={() => addToCart(selected, qty, selectedOpts)}   // ✅ 수정
-  >
-    {selected.stock>0 ? "Add to Cart" : "Sold Out"}
-  </button>
-  <button
-    disabled={selected.stock<=0}
-    className="px-4 py-2 rounded border disabled:opacity-50"
-    onClick={() => {
-      if (selected.stock>0) {
-        addToCart(selected, qty, selectedOpts)              // ✅ 수정
-        setShowCheckout(true)
-      }
-    }}
-  >
-    Buy Now
-  </button>
-</div>
+      {selected && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-20">
+          <div className="bg-white rounded-lg max-w-lg w-full p-6 relative">
+            <button onClick={()=>setSelected(null)} className="absolute top-2 right-2">✖</button>
+            <div className="relative">
+              <img src={(selected.gallery && selected.gallery[slide]) || selected.image} alt={nameOf(selected,"en")} className="w-full h-60 object-cover rounded"/>
+              {selected.gallery && selected.gallery.length>1 && (
+                <>
+                  <button onClick={()=>setSlide((slide-1+selected.gallery!.length)%selected.gallery!.length)} className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white px-2 py-1 rounded">‹</button>
+                  <button onClick={()=>setSlide((slide+1)%selected.gallery!.length)} className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white px-2 py-1 rounded">›</button>
+                </>
+              )}
+            </div>
+            <h3 className="mt-4 text-xl font-semibold" style={museo}>{nameOf(selected,lang)}</h3>
+            <p className="text-slate-600">{descOf(selected,lang)}</p>
+            <div className="mt-2 font-semibold">CAD ${selected.price_cad.toFixed(2)}</div>
 
-    {selected.options && selected.options.length > 0 && (
-  <div className="mt-3 space-y-2">
-    {selected.options.map((opt, i) => (
-      <div key={i} className="flex items-center gap-2">
-        <label className="text-sm w-24">{opt.label}</label>
-        <select
-          className="border rounded px-2 py-1 flex-1"
-          value={selectedOpts[opt.label] || ""} // 상태에 저장된 선택값
-          onChange={(e) =>
-            setSelectedOpts(prev => ({ ...prev, [opt.label]: e.target.value }))
-          }
-        >
-          {opt.values.map(v => (
-            <option key={v} value={v}>{v}</option>
-          ))}
-        </select>
-      </div>
-    ))}
-  </div>
-)}
+            {selected.options && selected.options.length>0 && (
+              <div className="mt-3 space-y-2">
+                {selected.options.map((opt,i)=>(
+                  <div key={i} className="flex items-center gap-2">
+                    <label className="text-sm w-24">{opt.label}</label>
+                    <select className="border rounded px-2 py-1 flex-1">
+                      {opt.values.map(v=>(<option key={v}>{v}</option>))}
+                    </select>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="mt-4 flex items-center gap-3">
+              <label className="text-sm">Qty</label>
+              <input type="number" min={1} max={selected.stock||99} value={qty} onChange={e=>setQty(Math.max(1,Math.min(Number(e.target.value||1),selected.stock||99)))} className="w-20 border rounded px-2 py-1"/>
+            </div>
+            <div className="mt-4 flex gap-3">
+              <button disabled={selected.stock<=0} className="px-4 py-2 rounded bg-slate-900 text-white disabled:opacity-50" onClick={()=>addToCart(selected,qty)}>{selected.stock>0 ? "Add to Cart" : "Sold Out"}</button>
+              <button disabled={selected.stock<=0} className="px-4 py-2 rounded border disabled:opacity-50" onClick={()=>{ if(selected.stock>0){ addToCart(selected,qty); setShowCheckout(true); }}}>Buy Now</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Cart Modal */}
       {showCart && (
@@ -473,24 +467,6 @@ React.useEffect(() => {
                     <div className="w-16 h-16 bg-slate-100 rounded overflow-hidden"><img src={ci.p.image} alt={nameOf(ci.p,"en")} className="w-full h-full object-cover"/></div>
                     <div>
                       <div className="font-medium">{nameOf(ci.p,lang)}</div>
-                      <div>
-  <div className="font-medium">{nameOf(ci.p,lang)}</div>
-
-  {/* ✅ 옵션 표시 블록 추가 */}
-  {ci.opts && (
-    <div className="text-xs text-slate-500">
-      {Object.entries(ci.opts).map(([label, val]) => (
-        <div key={label}>{label}: {val}</div>
-      ))}
-    </div>
-  )}
-
-  <div className="text-slate-600">Qty: {ci.qty}</div>
-  <div className="font-semibold">
-    Subtotal: CAD {(ci.p.priceCad * ci.qty).toFixed(2)}
-  </div>
-</div>
-
                       <div className="text-slate-600">Qty: {ci.qty}</div>
                       <div className="font-semibold">Subtotal: CAD {(ci.p.price_cad*ci.qty).toFixed(2)}</div>
                     </div>
